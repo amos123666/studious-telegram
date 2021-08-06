@@ -3,6 +3,12 @@ import email
 
 os.chdir('F:\FAQ_Project_data')  # REMOVE THIS
 
+'''
+This method takes in a text file and separates the file by posts
+@param: file - the text file
+@return: threads - list of posts
+'''
+
 
 def parsing_data(file):
     with open(file, 'r') as f:
@@ -20,6 +26,14 @@ def parsing_data(file):
     return threads
 
 
+'''
+This method breaks each post down into managable data structure
+so that each specific component can be extracted easily
+@param: threads - the list of psots
+@return: posts - list of lists that contains separated components of each post
+'''
+
+
 def get_posts(threads):
     posts = []
     for i in range(0, len(threads)):
@@ -30,6 +44,16 @@ def get_posts(threads):
         p.append(msg._payload)
         posts.append(p)
     return posts
+
+
+'''
+This method converts posts into a dictionary data structure for
+easier extraction of post components
+@param: posts - the list of posts
+@return: question - the dictionary of questions asked
+         answers - the dicitonary of answers to the question
+
+'''
 
 
 def create_data_structures(posts):

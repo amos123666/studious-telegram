@@ -18,11 +18,13 @@ def parsing_data(file):
         threads = []
 
         while line:
-            if(line[:4] == 'Date' and len(str) > 1):
+            if(line[:4] == 'Date' and len(str) > 0):
+                str = str.rstrip('\n')
                 threads.append(str)
                 str = ''
             str += line
             line = f.readline()
+        threads.append(str)
     return threads
 
 
@@ -65,17 +67,13 @@ def create_data_structures(posts):
             li.append(posts[i][0])
             li.append(posts[i][2])
             dict_q[posts[i][1]] = li
+            dict_a[posts[i][1]] = []
         else:
-            if posts[i][1] not in dict_a:
-                li.append(posts[i][0])
-                li.append(posts[i][2])
-                dict_a[posts[i][1]] = li
-            else:
-                li.append(posts[i][0])
-                li.append(posts[i][2])
-                current_li = dict_a.get(posts[i][1])
-                new_li = current_li+li
-                dict_a[posts[i][1]] = new_li
+            li.append(posts[i][0])
+            li.append(posts[i][2])
+            val = dict_a.get(posts[i][1])
+            val.append(li)
+            dict_a[posts[i][1]] = val
     return dict_q, dict_a
 
 
@@ -83,6 +81,7 @@ def main():
     file = 'help2002-2017.txt'
     parsed_list = parsing_data(file)
     posts = get_posts(parsed_list)
+    print(posts)
     questions, answers = create_data_structures(posts)
     print("SUBJECTS:")
     print()

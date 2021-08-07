@@ -81,12 +81,19 @@ def main():
     file = 'help2002-2017.txt'
     parsed_list = parsing_data(file)
     posts = get_posts(parsed_list)
-    print(posts)
     questions, answers = create_data_structures(posts)
     print("SUBJECTS:")
     print()
     for k, v in questions.items():
-        print(k)
+        print(f'QUESTION: {k}')
+        ans = answers.get(k)
+        print()
+        print('ANSWERS')
+        print('--------')
+        for a in ans:
+            print(a[1] + '\n\n')
+            print('-----')
+        print('----------------------')
 
 
 if __name__ == "__main__":

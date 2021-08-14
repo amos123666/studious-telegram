@@ -1,8 +1,8 @@
 import json
-from .parser import AbstractParser
+from .parser import AbstractLoader
 
 
-class JsonLoader(AbstractParser):
+class JsonLoader(AbstractLoader):
 
     def read_data(file):
 

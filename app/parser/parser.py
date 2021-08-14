@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class AbstractParser(ABC):
+class AbstractLoader(ABC):
     def __init__(self, file):
         self.__file = file
 

@@ -1,7 +1,6 @@
 import os
 import email
 
-os.chdir('F:\FAQ_Project_data')  # REMOVE THIS
 
 '''
 This method takes in a text file and separates the file by posts
@@ -11,21 +10,26 @@ This method takes in a text file and separates the file by posts
 
 
 def parsing_data(file):
-    with open(file, 'r') as f:
-        line = f.readline()
-        line = f.readline()  # Not sure best way to do this, needed to skip the first line
-        str = ''
-        threads = []
+    parsed_threads = []
 
-        while line:
-            if(line[:4] == 'Date' and len(str) > 0):
-                str = str.rstrip('\n')
-                threads.append(str)
-                str = ''
-            str += line
-            line = f.readline()
-        threads.append(str)
-    return threads
+    try:
+        data_file = open(file, 'r')
+    except Exception as e:
+        print("Error opening file: " + e)
+
+    cur_par = ''
+    for line in data_file:
+        if 'Date' in line and cur_par:
+            if cur_par.strip() != '': #empty email check
+                parsed_threads.append(cur_par)
+            cur_par = ''
+            cur_par += line
+        else:
+            cur_par += line
+
+    data_file.close()
+
+    return parsed
 
 
 '''

@@ -1,0 +1,137 @@
+    import email as em
+
+    class Questions:
+    """
+    Questions storage, retreival and parsing
+    ...
+
+    Attributes
+    ----------
+    EMAIL_LIST : list
+        list of emails, which consist of email type object.
+
+    Methods
+    -------
+    from_file(file_path):
+
+    from_list(list_of_messages)
+
+    get_body(subject):
+
+    get_thread(subject):
+
+    get_subject_list(subject):
+    """
+
+    EMAIL_LIST = []
+
+    def _get_messages(self, file_path):
+    """
+    Takes in a text file and separates the file by posts
+
+    Parameters
+    ----------
+        filename : str
+            name of file containing emails
+        """
+        parsed_threads = []
+
+        try:
+            data_file = open(file_path, 'r')
+        except Exception as e:
+            print("Error opening file: " + e)
+
+        cur_par = ''
+        for line in data_file:
+            if 'Date' in line and cur_par:
+                if cur_par.strip() != '': #empty email check
+                    parsed_threads.append(cur_par)
+                cur_par = ''
+                cur_par += line
+            else:
+                cur_par += line
+
+        data_file.close()
+
+        return parsed
+
+    def from_file(file_path):
+    """
+    Intisilise via file of messages
+
+    Parameters
+    ----------
+        file_name : str
+            name of file including extention
+
+    Return
+    ----------
+
+    """
+        list_of_messages = self._get_messages(file_path)
+        self.from_list(list_of_messages)
+
+    def from_list(list_of_messages):
+    """
+    Intisilise via list of messages and parse into Message type
+    object
+
+    Parameters
+    ----------
+        list_of_messages : list
+            list of individual messages
+
+    Return
+    ----------
+
+    """
+        for thread in list_of_messages:
+            self.EMAIL_LIST.append(em.message_from_string(thread))
+
+    def get_body(self, subject):
+        """
+        Search for first body by subject line
+
+        Parameters
+        ----------
+            subject : str
+                subject to find
+
+        Return
+        ----------
+            body : str
+                body of first message with the same subject given
+        """
+
+        return [em._payload for em in self.EMAIL_LIST if em['Subject']
+                == subject]
+
+    def get_thread(self, subject):
+        """
+        Search for all bodies by subject line
+
+        Parameters
+        ----------
+            subject : str
+                subject to find
+
+        Return
+        ----------
+            bodys : list
+                list of all bodies with the given subject line
+        """
+
+        return [email._payload for email in self.EMAIL_LIST
+                if str(email['Subject']) == subject]
+
+    def get_subject_list(self):
+        """
+        Get list of all unique subject lines
+
+        Return
+        ----------
+            subjects : list
+                list of all the unique subjects
+        """
+
+        return list(set([em['Subject'] for em in self.EMAIL_LIST]))

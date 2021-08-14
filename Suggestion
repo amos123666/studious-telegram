@@ -86,7 +86,10 @@
 
     """
         for thread in list_of_messages:
-            self.EMAIL_LIST.append(em.message_from_string(thread))
+            try:
+                self.EMAIL_LIST.append(em.message_from_string(thread))
+            except Exception as e:
+                print("Error extraction mailbox formate: " + e)
 
     def get_body(self, subject):
         """

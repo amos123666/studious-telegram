@@ -1,13 +1,13 @@
 from ..domain import AbstractQuestionMatcher
 from .userinterface import AbstractUserInterface
 
+
 class BasicCLI(AbstractUserInterface):
     __matcher: AbstractQuestionMatcher = None
 
     def __init__(self, matcher: AbstractQuestionMatcher) -> None:
         super().__init__()
         self.setQuestionMatcher(matcher)
-    
 
     def setQuestionMatcher(self, matcher: AbstractQuestionMatcher):
         self.__matcher = matcher
@@ -22,8 +22,5 @@ class BasicCLI(AbstractUserInterface):
             suggestions = self.__matcher.getSuggestions(question)
 
             print(f'QUESTIONS: {question}')
-            
-            for i in range(len(suggestions)):
-                if i >= 10:
-                    break
+            for i in range(0, 10):
                 print(f"{i + 1}: {suggestions[i]}")

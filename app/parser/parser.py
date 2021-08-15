@@ -4,10 +4,8 @@ import email
 def parseQuestionsAnswersFromFile(filePath: str):
     threads = parseThreadsFromFile(filePath)
     posts = getPostsFromThreads(threads)
-    print(posts[0])
-    #questions, answers = parseQuestionsAnswersFromPosts(posts)
-
-    # return questions, answers
+    questions, answers = parseQuestionsAnswersFromPosts(posts)
+    return questions, answers
 
 
 def parseThreadsFromFile(filePath: str):

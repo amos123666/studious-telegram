@@ -11,7 +11,7 @@ class App():
             'app/testfiles/help2002-2017.txt')
         question_answers_to_json(questions, answers)
         questionMatcher = UniversalEncoder(questions, answers)
-        self.__cli = BasicCLI(questionMatcher)
+        #self.__cli = BasicCLI(questionMatcher)
 
     def start(self) -> None:
         self.__cli.start()

@@ -23,6 +23,7 @@ def store_questions_json(questions, answers):
 
     # Get all the vectors for subject and text_summation
     flag = False
+    i = 0
     for k, v in questions.items():
 
         # get subject vectors
@@ -51,20 +52,22 @@ def store_questions_json(questions, answers):
 
         # store answers inside 'answers' key for the question
         ans = answers.get(k)
-        data['answers'].apend({
-            'date': ans[0],
-            'to': ans[1],
-            'Received': ans[2],
-            'subject':  k,
-            'from': ans[3],
-            'x-smilie': ans[4],
-            'x-img': ans[5],
-            'text_body': ans[6],
-        })
+        for a in ans:
+            data['questions'][i]['answers'].append({
+                'date': a[0],
+                'to': a[1],
+                'Received': a[2],
+                'subject':  k,
+                'from': a[3],
+                'x-smilie': a[4],
+                'x-img': a[5],
+                'text_body': a[6],
+            })
+        i += 1
 
     # write to file
     with open('questions_UE.json', 'w') as outfile:
-        json.dump(data, outfile)
+        json.dump(data, outfile, indent=4)
 
 
 def get_vectors(data):

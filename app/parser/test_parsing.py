@@ -2,7 +2,7 @@ import unittest
 from parsing import get_vectors, parseThreadsFromFile
 
 
-class TestJParsing(unittest.TestCase):
+class TestParsing(unittest.TestCase):
 
     def test_vectors(self):
         '''

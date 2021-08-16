@@ -40,15 +40,16 @@ class BasicCLI(AbstractUserInterface):
             the program is exited. 
             '''
             if not question:
-                print("Thank you for using this software :)")
+                print("\nThank you for using this software :)")
                 break
 
-            print("Loading....")
+            print("\nLoading Suggestions....\n")
             suggestions = self.__matcher.getSuggestions(question)
 
-            print(f'QUESTIONS: {question}')
+            print(f'QUESTIONS: {question}\n')
             
             for i in range(len(suggestions)):
                 if i >= 10:
                     break
                 print(f"{i + 1}: {suggestions[i]}")
+            print("")

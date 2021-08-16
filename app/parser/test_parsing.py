@@ -5,6 +5,10 @@ from parsing import get_vectors, parseThreadsFromFile
 class TestJParsing(unittest.TestCase):
 
     def test_vectors(self):
+        '''
+        Tests when inputting a string, that the resulting vector
+        is an instance of the class list, and the length is 512
+        '''
         string = "I need exam help."
         actual = get_vectors(string)
 
@@ -12,6 +16,11 @@ class TestJParsing(unittest.TestCase):
         self.assertEqual(len(actual), 512)
 
     def test_parsing_testfiles(self):
+        '''
+        Tests when reading in a file, the output is a list of strings containing
+        each individual post as its element
+        '''
+
         file = 'testposts.txt'
         actual = parseThreadsFromFile(file)
 

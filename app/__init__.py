@@ -9,12 +9,12 @@ class App():
     def __init__(self, targetModel="UniversalEncoder") -> None:
 
         # Uncomment this if you want to create a new json file
-        '''
+
         questions, answers = parseQuestionsAnswersFromFile(
             'app/testfiles/help2002-2017.txt')
-        '''
-        json = JsonLoader('app/storage/questions2017_UE.json')
-        questions = json.read_data()
+
+        #json = JsonLoader('app/storage/questions2017_UE.json')
+        #questions = json.read_data()
 
         if targetModel == "UniversalEncoder":
             questionMatcher = UniversalEncoder(questions)

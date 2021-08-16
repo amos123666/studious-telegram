@@ -10,9 +10,8 @@ from typing import List
 
 
 class Doc2Vec(AbstractQuestionMatcher):
-    def __init__(self, questions, answers):
+    def __init__(self, questions):
         self.__questions = questions
-        self.__answers = answers
 
     def getSuggestions(self, question: str) -> List[str]:
 

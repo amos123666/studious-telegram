@@ -1,11 +1,14 @@
 import email
+import tensorflow as tf
+import tensorflow_hub as hub
+import json
 
 
 def parseQuestionsAnswersFromFile(filePath: str):
     threads = parseThreadsFromFile(filePath)
-    posts = getPostsFromThreads(threads)
-    questions, answers = parseQuestionsAnswersFromPosts(posts)
-    return questions, answers
+    getPostsFromThreads(threads)
+    # questions, answers = parseQuestionsAnswersFromPosts(posts)
+    # return questions, answers
 
 
 def parseThreadsFromFile(filePath: str):
@@ -27,46 +30,44 @@ def parseThreadsFromFile(filePath: str):
 
 
 def getPostsFromThreads(threads):
-    posts = []
+    questions = {}
     for i in range(0, len(threads)):
+
         msg = email.message_from_string(threads[i])
-        p = []
-        p.append(msg['Date'])
-        p.append(msg['To'])
-        p.append(msg['Received'])
-        p.append(msg['Subject'])
-        p.append(msg['From'])
-        p.append(msg['X-smile'])
-        p.append(msg['X-img'])
-        p.append(msg._payload)
-        posts.append(p)
-    return posts
 
+        if msg['Subject'] not in questions.keys():
 
-def parseQuestionsAnswersFromPosts(posts):
-    dict_q = {}
-    dict_a = {}
-    for i in range(len(posts)):
-        li = []
-        if posts[i][3] not in dict_q:  # post[i][3] == Subject
-            li.append(posts[i][0])  # Date
-            li.append(posts[i][1])  # To
-            li.append(posts[i][2])  # Received
-            li.append(posts[i][4])  # From
-            li.append(posts[i][5])  # X-smile
-            li.append(posts[i][6])  # X-img
-            li.append(posts[i][7])  # text body
-            dict_q[posts[i][3]] = li
-            dict_a[posts[i][3]] = []
+            vec = get_vectors(msg['Subject'])
+            vec = vec.numpy().tolist()
+            questions[msg['Subject']] = {'Date': msg['Date'],
+                                         'To': msg['To'],
+                                         'Received': msg['Received'],
+                                         'Subject_vec': vec,
+                                         'From': msg['From'],
+                                         'X-smile': msg['X-smile'],
+                                         'X-img': msg['X-img'],
+                                         'Text': msg._payload,
+                                         'Text_vec': [0],
+                                         'Answers': [],
+                                         }
         else:
-            li.append(posts[i][0])  # Date
-            li.append(posts[i][1])  # To
-            li.append(posts[i][2])  # Received
-            li.append(posts[i][4])  # From
-            li.append(posts[i][5])  # X-smile
-            li.append(posts[i][6])  # X-img
-            li.append(posts[i][7])  # text body
-            val = dict_a.get(posts[i][3])
-            val.append(li)
-            dict_a[posts[i][3]] = val
-    return dict_q, dict_a
+            questions[msg['Subject']]['Answers'].append({'Date': msg['Date'],
+                                                         'To': msg['To'],
+                                                         'Received': msg['Received'],
+                                                         'Subject': msg['Subject'],
+                                                         'From': msg['From'],
+                                                         'X-smile': msg['X-smile'],
+                                                         'X-img': msg['X-img'],
+                                                         'Text': msg._payload,
+                                                         })
+    with open('questions2017_UE.json', 'w') as outfile:
+        json.dump(questions, outfile, indent=4)
+    print("Finished loading Json...")
+
+
+def get_vectors(question):
+    module_url = "https://tfhub.dev/google/universal-sentence-encoder/4"
+    model = hub.load(module_url)
+    vec = model([question])[0]
+    vec = tf.reshape(vec, (-1, 1))
+    return vec

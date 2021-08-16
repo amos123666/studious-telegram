@@ -4,10 +4,13 @@ from .loader import AbstractLoader
 
 class JsonLoader(AbstractLoader):
 
-    def read_data(file):
+    def __init__(self, file):
+        self.__file = file
+
+    def read_data(self):
 
         # load in json data
-        with open(file, 'r') as fp:
+        with open(self.__file, 'r') as fp:
             data = json.load(fp)
 
         return data

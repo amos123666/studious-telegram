@@ -6,7 +6,6 @@ import operator
 
 from typing import List
 
-
 class SentBERT(AbstractQuestionMatcher):
     def __init__(self, questions):
         # Load the model and pass in questions as a list to get embeddings
@@ -24,6 +23,7 @@ class SentBERT(AbstractQuestionMatcher):
         similarity_dict = {}
         for i, sentence_embedding in enumerate(self.__sentence_embeddings):
             sentence_embedding = sentence_embedding.reshape(-1, 1)
+            
             similarity_dict[self.__question_list[i]] = 1 - \
                 cosine(sentence_embedding, query_embedding)
 

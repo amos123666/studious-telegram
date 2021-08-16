@@ -27,8 +27,8 @@ class KeywordMatcher(AbstractQuestionMatcher):
         :return suggestions: List of suggested question subjects
         '''
         # create a dictionary mapping keywords to the subjects of previous questions
-        pastQuestions = {
-            "pointer": "How do I use pointers in C?", "code": "How do I code well?"}
+        pastQuestions = {"pointer": "How do I use pointers in C?", "code": "How do I code well?"}
+
         suggestions = []
 
         for word in question.split(" "):

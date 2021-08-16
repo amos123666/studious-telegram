@@ -17,11 +17,13 @@ class UniversalEncoder(AbstractQuestionMatcher):
         self.__question_list = list(questions.keys())
         #self.__sentence_embeddings = self.__model(self.__question_list)
 
+
     def getSuggestions(self, question: str) -> List[str]:
         query_embedding = self.__model([question])[0]
         query_embedding = tf.reshape(query_embedding, (-1, 1))
 
         similarity_dict = {}
+
         for i, subject in enumerate(self.__questions.keys()):
             sentence_embedding = tf.reshape(
                 self.__questions[subject]['Subject_vec'], (-1, 1))

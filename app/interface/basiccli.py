@@ -3,9 +3,19 @@ from .userinterface import AbstractUserInterface
 
 
 class BasicCLI(AbstractUserInterface):
+    '''
+    Class for constructing a basic command line interface for the user 
+    to interact with when asking questions and viewing suggestions.
+    '''
     __matcher: AbstractQuestionMatcher = None
 
     def __init__(self, matcher: AbstractQuestionMatcher, questions):
+        '''
+        Constructor for the BasicCLI class.
+
+        :param self: Instance of the BasicCLI object
+        :par
+        '''
         super().__init__()
         self.setQuestionMatcher(matcher)
         self.__questions = questions
@@ -48,6 +58,12 @@ class BasicCLI(AbstractUserInterface):
             print()
 
     def start(self):
+        '''
+        Prints the top 10 question suggestions, based on the user's command 
+        line entry.
+
+        :param self: Instance of the BasicCLI object
+        '''
         if self.__matcher == None:
             raise RuntimeError("Matcher has not been set.")
 

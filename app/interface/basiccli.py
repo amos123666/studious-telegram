@@ -1,5 +1,6 @@
 from ..domain import AbstractQuestionMatcher
 from .userinterface import AbstractUserInterface
+import questionary
 
 class BasicCLI(AbstractUserInterface):
     '''
@@ -33,14 +34,20 @@ class BasicCLI(AbstractUserInterface):
             raise RuntimeError("Matcher has not been set.")
 
         while True:
-            question = input("Please enter your question >> ")
 
+            year = questionary.select(
+                "What year do you want to search?",
+                choices=["2017", "2018", "2018"],
+            ).ask()
+            week = questionary.text("What semester week is this (1-12)?").ask()
+            question = questionary.text("What is your Question?").ask()
+            
             '''
             If the user does not ask a question i.e. presses enter with no questions,
             the program is exited. 
             '''
             if not question:
-                print("\nThank you for using this software :)")
+                print("\nThank you for using our program :)\n")
                 break
 
             print("\nLoading Suggestions....\n")
@@ -51,5 +58,19 @@ class BasicCLI(AbstractUserInterface):
             for i in range(len(suggestions)):
                 if i >= 10:
                     break
-                print(f"{i + 1}: {suggestions[i]}")
+                print(f"{i + 1}: {suggestions[i]}")   
             print("")
+
+            if questionary.confirm("Would you like to view these suggestions?").ask():
+                questionary.checkbox(
+                    'Select questions',
+                    choices=
+                        suggestions[:10]
+                    ).ask()
+
+                '''
+                show the user the contents 
+                '''
+            if not questionary.confirm("Would you like to ask another question?").ask():
+                print("\nThank you for using our program :)\n")
+                break

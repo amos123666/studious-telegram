@@ -9,7 +9,7 @@ class App():
     def __init__(self) -> None:
         # parseQuestionsAnswersFromFile(
         # 'app/testfiles/help2002-2017.txt') Uncomment this if you want to create a new json file
-        json = JsonLoader('questions2017_UE.json')
+        json = JsonLoader('app/storage/questions2017_UE.json')
         questions = json.read_data()
         questionMatcher = UniversalEncoder(questions)
         self.__cli = BasicCLI(questionMatcher, questions)

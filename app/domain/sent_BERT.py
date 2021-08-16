@@ -23,10 +23,12 @@ class SentBERT(AbstractQuestionMatcher):
         similarity_dict = {}
         for i, sentence_embedding in enumerate(self.__sentence_embeddings):
             sentence_embedding = sentence_embedding.reshape(-1, 1)
-            similarity_dict[self.__question_list[i]] = 1 - cosine(sentence_embedding, query_embedding)
+            
+            similarity_dict[self.__question_list[i]] = 1 - \
+                cosine(sentence_embedding, query_embedding)
 
         # Order dicitonary to a list, such that higher cosine are first
         similarity_dict = sorted(similarity_dict.items(),
-                          key=operator.itemgetter(1), reverse=True)
+                                 key=operator.itemgetter(1), reverse=True)
 
         return [k[0] for k in similarity_dict]

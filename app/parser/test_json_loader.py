@@ -5,6 +5,10 @@ from json_loader import JsonLoader
 class TestJson(unittest.TestCase):
 
     def test_json_storage(self):
+        '''
+        Tests to observer how the function successfully creates
+        a JSON object when reading in a file with JSON data.
+        '''
 
         file = 'testfile1.json'
         json = JsonLoader(file)
@@ -29,6 +33,11 @@ class TestJson(unittest.TestCase):
             self.assertEqual(len(actual1[subject]['Answers']), 3)
 
     def test_file_exists(self):
+        '''
+        Tests to observer how the function handles files that
+        do no exists or the director is incorrect during execution
+        '''
+
         file = "TestFileExists.json"
 
         json = JsonLoader(file)
@@ -37,6 +46,11 @@ class TestJson(unittest.TestCase):
         self.assertEqual(actual1, None)
 
     def test_file_json_readable(self):
+        '''
+        Tests to observer how the function handles non JSON readable
+        data or invalid file formats for JSON extraction
+        '''
+
         file = 'testfile.jpg'
 
         json = JsonLoader(file)

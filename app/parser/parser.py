@@ -60,7 +60,7 @@ def getPostsFromThreads(threads):
                                                          'X-img': msg['X-img'],
                                                          'Text': msg._payload,
                                                          })
-    with open('questions2017_UE.json', 'w') as outfile:
+    with open('app/storage/questions2017_UE.json', 'w') as outfile:
         json.dump(questions, outfile, indent=4)
     print("Finished loading Json...")
 

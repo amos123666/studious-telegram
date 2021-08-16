@@ -34,6 +34,15 @@ class BasicCLI(AbstractUserInterface):
 
         while True:
             question = input("Please enter your question >> ")
+
+            '''
+            If the user does not ask a question i.e. presses enter with no questions,
+            the program is exited. 
+            '''
+            if not question:
+                print("Thank you for using this software :)")
+                break
+
             print("Loading....")
             suggestions = self.__matcher.getSuggestions(question)
 

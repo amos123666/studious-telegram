@@ -37,7 +37,7 @@ class BasicCLI(AbstractUserInterface):
 
             year = questionary.select(
                 "What year do you want to search?",
-                choices=["2017", "2018", "2018"],
+                choices=["2017", "2018", "2019"],
             ).ask()
             week = questionary.text("What semester week is this (1-12)?").ask()
             question = questionary.text("What is your Question?").ask()
@@ -70,7 +70,7 @@ class BasicCLI(AbstractUserInterface):
 
                 '''
                 show the user the contents 
-                '''
+                '''     
             if not questionary.confirm("Would you like to ask another question?").ask():
                 print("\nThank you for using our program :)\n")
                 break

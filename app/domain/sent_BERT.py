@@ -6,6 +6,7 @@ import operator
 
 from typing import List
 
+
 class SentBERT(AbstractQuestionMatcher):
     def __init__(self, questions):
         # Load the model and pass in questions as a list to get embeddings
@@ -14,6 +15,15 @@ class SentBERT(AbstractQuestionMatcher):
         self.__sentence_embeddings = self.__model.encode(self.__question_list)
 
     def getSuggestions(self, question: str) -> List[str]:
+
+        if(len(question) == 0 or len(question) > 512):
+            print("Question asked is too long. Exceeded 512")
+            return None
+
+        if(isinstance(question, str) == False):
+            print("Question needs to be a string.")
+            return None
+
         # pass the asked question into model to get embedding
         query_embedding = self.__model.encode([question])[0]
         query_embedding = query_embedding.reshape(-1, 1)
@@ -23,7 +33,7 @@ class SentBERT(AbstractQuestionMatcher):
         similarity_dict = {}
         for i, sentence_embedding in enumerate(self.__sentence_embeddings):
             sentence_embedding = sentence_embedding.reshape(-1, 1)
-            
+
             similarity_dict[self.__question_list[i]] = 1 - \
                 cosine(sentence_embedding, query_embedding)
 

@@ -17,8 +17,15 @@ class UniversalEncoder(AbstractQuestionMatcher):
         self.__question_list = list(questions.keys())
         #self.__sentence_embeddings = self.__model(self.__question_list)
 
-
     def getSuggestions(self, question: str) -> List[str]:
+        if(len(question) == 0 or len(question) > 512):
+            print("Question asked is too long. Exceeded 512")
+            return None
+
+        if(isinstance(question, str) == False):
+            print("Question needs to be a string.")
+            return None
+
         query_embedding = self.__model([question])[0]
         query_embedding = tf.reshape(query_embedding, (-1, 1))
 

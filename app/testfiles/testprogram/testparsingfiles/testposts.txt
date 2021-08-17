@@ -1,0 +1,31 @@
+
+Date: Wed Aug  2 18:26:40 2017
+To: help2002@csse.uwa.edu.au
+Received: from 106.68.103.155
+Subject: On lecture recordings
+From: chris.mcdonald@uwa.edu.au
+X-smilie: none
+X-img: none
+
+Hello Everyone,
+
+I've asked the LCS/Echo360 Gods to permit our unit's recordings to be available from 
+outside Blackboard, and accessible from our webpage's left-hand margin without requiring 
+you to login to Blackboard (as it's been in previous years).
+
+Until then, you can access last Tuesday's lecture via Blackboard (ho hum!).
+
+Chris.
+
+
+Date: Thu Aug  3 18:59:12 2017
+To: help2002@csse.uwa.edu.au
+Received: from 106.68.103.155
+Subject: On lecture recordings
+From: chris.mcdonald@uwa.edu.au
+X-smilie: none
+X-img: none
+
+You may now access our LCS recordings directly, from the left margin of our unit's webpage, without 
+needing to go through LMS.  Thanks to those that reported the problem.
+

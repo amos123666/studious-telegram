@@ -117,7 +117,10 @@ def write_to_json(questions):
 def get_vectors(question):
     module_url = "https://tfhub.dev/google/universal-sentence-encoder/4"
     model = hub.load(module_url)
-    vec = model([question])[0]
-    vec = tf.reshape(vec, (-1, 1))
-    vec = vec.numpy().tolist()
-    return vec
+    if(len(question) > 1 or question.strip() != ""):
+        vec = model([question])[0]
+        vec = tf.reshape(vec, (-1, 1))
+        vec = vec.numpy().tolist()
+        return vec
+    else:
+        return None

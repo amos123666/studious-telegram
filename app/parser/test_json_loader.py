@@ -10,7 +10,7 @@ class TestJson(unittest.TestCase):
         a JSON object when reading in a file with JSON data.
         '''
 
-        file = 'testfile1.json'
+        file = 'testparsingfiles/testfile1.json'
         json = JsonLoader(file)
         actual1 = json.read_data()
 
@@ -38,7 +38,7 @@ class TestJson(unittest.TestCase):
         do no exists or the director is incorrect during execution
         '''
 
-        file = "TestFileExists.json"
+        file = "testparsingfiles/TestFileExists.json"
 
         json = JsonLoader(file)
         actual1 = json.read_data()
@@ -51,7 +51,7 @@ class TestJson(unittest.TestCase):
         data or invalid file formats for JSON extraction
         '''
 
-        file = 'testfile.jpg'
+        file = 'testparsingfiles/testfile.jpg'
 
         json = JsonLoader(file)
         actual1 = json.read_data()

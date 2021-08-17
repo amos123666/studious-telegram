@@ -16,7 +16,8 @@ def parseQuestionsAnswersFromFile(filePath: str):
     :return answers: Dictionary of answer threads
     '''
     threads = parseThreadsFromFile(filePath)
-    # getPostsFromThreads(threads)
+    questions = getPostsFromThreads(threads)
+    write_to_json(questions)
 
 
 def parseThreadsFromFile(filePath: str):
@@ -44,7 +45,10 @@ def parseThreadsFromFile(filePath: str):
                         str = ''
                     str += line
                     line = file.readline()
-                threads.append(str)
+                    if(len(threads) == 3):
+                        break
+                # threads.append(str)
+                threads = threads[1:]
                 return threads
 
             except FileNotFoundError:
@@ -96,8 +100,17 @@ def getPostsFromThreads(threads):
                                                          'X-anonymous': anonymous,
                                                          'Text': msg._payload,
                                                          })
-    with open('app/storage/questions2017_UE.json', 'w') as outfile:
-        json.dump(questions, outfile, indent=4)
+    return questions
+
+
+def write_to_json(questions):
+
+    with open('app/storage/testfile2.json', 'w') as outfile:
+        try:
+            json.dump(questions, outfile, indent=4)
+        except TypeError:
+            print("not json")
+            exit(1)
     print("Finished loading Json...")
 
 
@@ -107,5 +120,4 @@ def get_vectors(question):
     vec = model([question])[0]
     vec = tf.reshape(vec, (-1, 1))
     vec = vec.numpy().tolist()
-    print(type(vec))
     return vec

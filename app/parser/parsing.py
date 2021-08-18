@@ -45,10 +45,7 @@ def parseThreadsFromFile(filePath: str):
                         str = ''
                     str += line
                     line = file.readline()
-                    if(len(threads) == 3):
-                        break
-                # threads.append(str)
-                threads = threads[1:]
+                threads.append(str)
                 return threads
 
             except FileNotFoundError:

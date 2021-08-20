@@ -4,6 +4,7 @@ from app.parser.json_loader import JsonLoader
 from app.parser.parsing import get_vectors, parseThreadsFromFile, getPostsFromThreads
 from app.domain import UniversalEncoder, SentBERT
 import json
+from time import perf_counter
 
 
 class TestParsing(unittest.TestCase):
@@ -13,6 +14,7 @@ class TestParsing(unittest.TestCase):
         Tests when inputting a string, that the resulting vector
         is an instance of the class list, and the length is 512
         '''
+
         string = "I need exam help."
         actual = get_vectors(string)
 
@@ -40,6 +42,7 @@ class TestParsing(unittest.TestCase):
         Tests to observe how JSON formatted dictionary is created and
         whether the contents are in the correct format.
         '''
+
         text = ["Date: Wed Aug  2 18:26:40 2017\nTo: help2002@csse.uwa.edu.au\nReceived: from 106.68.103.155\nSubject: On lecture recordings\nFrom: chris.mcdonald@uwa.edu.au\nX-smilie: none\nX-img: none\n\nHello Everyone,\n\nI've asked the LCS/Echo360 Gods to permit our unit's recordings to be available from \noutside Blackboard, and accessible from our webpage's left-hand margin without requiring \nyou to login to Blackboard (as it's been in previous years).\n\nUntil then, you can access last Tuesday's lecture via Blackboard (ho hum!).\n\nChris.", "Date: Thu Aug  3 18:59:12 2017\nTo: help2002@csse.uwa.edu.au\nReceived: from 106.68.103.155\nSubject: On lecture recordings\nFrom: chris.mcdonald@uwa.edu.au\nX-smilie: none\nX-img: none\n\nYou may now access our LCS recordings directly, from the left margin of our unit's webpage, without \nneeding to go through LMS.  Thanks to those that reported \
                 the problem."]
         actual = getPostsFromThreads(text)
@@ -110,6 +113,8 @@ class TestJson(unittest.TestCase):
         do no exists or the director is incorrect during execution
         '''
 
+        start = perf_counter()
+
         file = "app/testfiles/testparsingfiles/TestFileExists.json"
 
         json = JsonLoader(file)
@@ -131,9 +136,10 @@ class TestJson(unittest.TestCase):
         self.assertEqual(actual1, None)
 
 
-class TestModelEncoders(unittest.TestCase):
+class TestModels(unittest.TestCase):
 
     def test_get_suggetions_Universal_Encoder(self):
+
         string = ''
         test_questions = 'app/testfiles/testparsingfiles/testfile2.json'
         json_obj = JsonLoader(test_questions)
@@ -156,6 +162,7 @@ class TestModelEncoders(unittest.TestCase):
         self.assertEquals(suggestions2, None)
 
     def test_get_suggetions_Sent_BERT(self):
+
         string = ''
         test_questions = 'app/testfiles/testparsingfiles/testfile2.json'
         json_obj = JsonLoader(test_questions)
@@ -178,6 +185,24 @@ class TestModelEncoders(unittest.TestCase):
         self.assertEquals(suggestions2, None)
 
 
-if __name__ == "__main__":
+def run_some_tests():
+    # Run only the tests in the specified classes
 
-    unittest.main()
+    test_classes_to_run = [TestJson, TestParsing, TestModels]
+
+    loader = unittest.TestLoader()
+
+    suites_list = []
+    for test_class in test_classes_to_run:
+        suite = loader.loadTestsFromTestCase(test_class)
+        suites_list.append(suite)
+
+    big_suite = unittest.TestSuite(suites_list)
+
+    runner = unittest.TextTestRunner()
+
+    results = runner.run(big_suite)
+
+
+if __name__ == '__main__':
+    run_some_tests()

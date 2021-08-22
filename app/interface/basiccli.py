@@ -69,8 +69,10 @@ class BasicCLI(AbstractUserInterface):
 
         while True:
             question = input("Please enter your question >> ")
+            text_question = input("Please explain your question >>")
             print("Loading....")
-            suggestions = self.__matcher.getSuggestions(question)
+            post = question + '.' + text_question
+            suggestions = self.__matcher.getSuggestions(post)
 
             print(f'QUESTIONS: {question}')
             for i in range(0, 10):

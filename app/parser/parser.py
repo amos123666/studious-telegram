@@ -1,6 +1,7 @@
 import email
 import tensorflow as tf
 import tensorflow_hub as hub
+from transformers import AutoTokenizer, AutoModelWithLMHead
 import json
 
 
@@ -16,7 +17,7 @@ def parseQuestionsAnswersFromFile(filePath: str):
     threads = parseThreadsFromFile(filePath)
     getPostsFromThreads(threads)
 
-    
+
 def parseThreadsFromFile(filePath: str):
     '''
     Arranges the contents of a file into separate threads (ie. an individual 
@@ -53,23 +54,30 @@ def getPostsFromThreads(threads):
     '''
     questions = {}
 
+    tokenizer = AutoTokenizer.from_pretrained('t5-base')
+    model = AutoModelWithLMHead.from_pretrained(
+        't5-base', return_dict=True)
+
     for i in range(0, len(threads)):
 
         msg = email.message_from_string(threads[i])
-
+        print(msg['Subject'])
         if msg['Subject'] not in questions.keys():
+            subj_vec = get_vectors(msg['Subject'])
+            subj_vec = subj_vec.numpy().tolist()
 
-            vec = get_vectors(msg['Subject'])
-            vec = vec.numpy().tolist()
+            text_vec = text_summarisation(msg._payload, tokenizer, model)
+            text_vec = get_vectors(str(msg['Subject'] + text_vec))
+            text_vec = text_vec.numpy().tolist()
             questions[msg['Subject']] = {'Date': msg['Date'],
                                          'To': msg['To'],
                                          'Received': msg['Received'],
-                                         'Subject_vec': vec,
+                                         'Subject_vec': subj_vec,
                                          'From': msg['From'],
                                          'X-smile': msg['X-smile'],
                                          'X-img': msg['X-img'],
                                          'Text': msg._payload,
-                                         'Text_vec': [0],
+                                         'Text_vec': text_vec,
                                          'Answers': [],
                                          }
         else:
@@ -82,7 +90,7 @@ def getPostsFromThreads(threads):
                                                          'X-img': msg['X-img'],
                                                          'Text': msg._payload,
                                                          })
-    with open('app/storage/questions2017_UE.json', 'w') as outfile:
+    with open('app/storage/questions2017_UE_test.json', 'w') as outfile:
         json.dump(questions, outfile, indent=4)
     print("Finished loading Json...")
 
@@ -93,3 +101,19 @@ def get_vectors(question):
     vec = model([question])[0]
     vec = tf.reshape(vec, (-1, 1))
     return vec
+
+
+def text_summarisation(data, tokenizer, model):
+
+    inputs = tokenizer.encode(data,
+                              return_tensors='pt',
+                              max_length=512,
+                              truncation=True)
+
+    summary_ids = model.generate(
+        inputs, no_repeat_ngram_size=2, max_length=20, min_length=10, length_penalty=5., num_beams=4, early_stopping=True)
+
+    summary = tokenizer.decode(
+        summary_ids[0], skip_special_tokens=True)
+
+    return summary

@@ -13,7 +13,7 @@ class App():
         questions, answers = parseQuestionsAnswersFromFile(
             'app/testfiles/help2002-2017.txt')
         '''
-        json = JsonLoader('app/storage/questions2017_UE.json')
+        json = JsonLoader('app/storage/questions2017_UE_test.json')
         questions = json.read_data()
 
         if targetModel == "UniversalEncoder":

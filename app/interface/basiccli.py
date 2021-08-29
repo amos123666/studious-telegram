@@ -1,6 +1,8 @@
 from ..domain import AbstractQuestionMatcher
 from .userinterface import AbstractUserInterface
 import questionary
+import argparse
+
 
 class BasicCLI(AbstractUserInterface):
     '''
@@ -30,17 +32,54 @@ class BasicCLI(AbstractUserInterface):
 
         :param self: Instance of the BasicCLI object
         '''
+        my_parser = argparse.ArgumentParser(description='Suggest previously asked questions by previous students based on similarity to submitted question')
+
+        my_parser.add_argument('Year',
+                            metavar='Year',
+                            nargs = "?",
+                            type=str,
+                            help='The year the suggestions will come from')
+                            
+        my_parser.add_argument('Week',
+                            metavar='Week',
+                            nargs = "?",
+                            type=str,
+                            help='The semester week the suggestions will come from')
+
+        my_parser.add_argument('Question',
+                            metavar='Question',
+                            nargs = "?",
+                            type=str,
+                            help='The question you wish to ask')
+
+        args = my_parser.parse_args()
+
         if self.__matcher == None:
             raise RuntimeError("Matcher has not been set.")
 
         while True:
 
-            year = questionary.select(
-                "What year do you want to search?",
-                choices=["2017", "2018", "2019"],
-            ).ask()
-            week = questionary.text("What semester week is this (1-12)?").ask()
-            question = questionary.text("What is your Question?").ask()
+            if args.Year:
+                print("Year selected: " + str(args.Year))
+                year = args.Year
+            if args.Week:
+                print("Week selected: " + str(args.Week))
+                week = args.Week
+            if args.Question:
+                print("Question inputted: " +str(args.Question))
+                question = args.Question
+
+            if not args.Year:
+                year = questionary.select(
+                    "What year do you want to search?",
+                    choices=["2017", "2018", "2019"],
+                ).ask()
+
+            if not args.Week:
+                week = questionary.text("What semester week is this (1-12)?").ask()
+
+            if not args.Question:
+                question = questionary.text("What is your Question?").ask()
             
             '''
             If the user does not ask a question i.e. presses enter with no questions,
@@ -71,6 +110,10 @@ class BasicCLI(AbstractUserInterface):
                 '''
                 show the user the contents 
                 '''     
-            if not questionary.confirm("Would you like to ask another question?").ask():
+            if questionary.confirm("Would you like to ask another question?").ask():
+                args.Year = ""
+                args.Week = "" 
+                args.Question = ""
+            else:
                 print("\nThank you for using our program :)\n")
                 break

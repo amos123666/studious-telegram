@@ -1,49 +1,36 @@
 # studious-telegram
 Question and answer identifier for CITS2002
 
-# Starting the app
-
-Requires python 3.8+
-
-```
-python3 ./main.py
-```
-
 # Structure
 
-The project has been built with interfaces for the major components to allow for a greater level of modularity.
+Currently the project is made up of a single module, `qna`. The `qna` module is the guts of the project performing natural language processing to a given question to previously asked questions.
 
-`main.py` builds the question matcher and the user interface, links them, and then triggers the UI's main input loop.
+# Running the project
 
-### `AbstractQuestionMatcher`
+The project can be run in two ways. 
 
-This defines the question matcher, the core of the application.
+### Locally like any other python project. 
 
-Concrete question matcher implementations must be a subclass of this abstract matcher and implement all abstract methods. Question matchers are consumed by User Interfaces.
+See instructions in the [`qna/README.md`](qna/README.md)
 
-### `AbstractUserInterface`
+### In Docker
 
-This defines the user interface, the component that allows the user to interact with the question matcher.
+With docker installed ([Get Docker](https://docs.docker.com/get-docker/)) run the follow commands in order. These commands might be different under windows.
 
-Concrete user interface implementations must be a subclass and implement all abstract methods.
+```
+docker build --file ./docker/qna.dockerfile -t qna .
+docker run -it qna
+```
 
-# Requirements
+Alternatively for UNIX based systems you can use the start script.
 
-## Python modules
+```
+./start.sh
+```
 
-* `gensim`
-* `nltk`
-* `sklearn`
-* `sentence_transformers`
-* `tensorflow`
-* `tensorflow_hub`
-* `scipy`
-* `numpy`
-* `pandas`
+You might have to change the script permissions `chmod +x ./start.sh`
 
-# Data
 
-This app relies on previous QnA data. This data, although not highly sensitive, should not be publicly shared so that risk is minimised. To achieve this all data should be stored in `./data`. This directory is included in `.gitignore` to help prevent accidental upload.
 
 # GitHub usage
 

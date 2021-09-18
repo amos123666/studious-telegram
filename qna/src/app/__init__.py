@@ -6,7 +6,7 @@ from app.parser import JsonLoader
 
 class App():
 
-    def __init__(self, target_model="UniversalEncoder", target_interface="cli") -> None:
+    def __init__(self, target_model, target_interface) -> None:
 
         # Uncomment this if you want to create a new json file
         '''

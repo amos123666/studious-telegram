@@ -47,6 +47,11 @@
                         document.getElementById("askquestion").value;
 
                     const res = await fetch(`/api/question/${questionText}`);
+
+                    if (!res.ok) {
+                        return;
+                    }
+
                     const data = await res.json();
 
                     const matches = data.matches;

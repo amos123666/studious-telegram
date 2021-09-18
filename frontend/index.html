@@ -24,12 +24,12 @@
                         type="text"
                         id="askquestion"
                         name="askquestion"
-                        value="Help"
-                        oninput="getSuggestions()"
+                        value="Lab 1 help"
+                        oninput="onQuestionInputChange()"
                     />
                 </div>
                 <div class="form-group">
-                    <button onclick="getSuggestions()">Go</button>
+                    <button onclick="getSuggestions()">Search</button>
                 </div>
             </div>
             <div class="card" id="suggestions"></div>
@@ -39,7 +39,9 @@
                     console.log(suggestionId);
                 }
 
-                async function getSuggestions() {
+                let fetchSuggestionsTimeout = null;
+
+                async function fetchSuggestions() {
                     const weekText = document.getElementById("week").value;
                     const questionText =
                         document.getElementById("askquestion").value;
@@ -64,6 +66,16 @@
                         suggestionCardElement.appendChild(suggestionElement);
                     }
                 }
+
+                function onQuestionInputChange() {
+                    if (fetchSuggestionsTimeout) {
+                        clearTimeout(fetchSuggestionsTimeout);
+                    }
+
+                    fetchSuggestionsTimeout = setTimeout(fetchSuggestions, 190);
+                }
+
+                fetchSuggestions();
             </script>
         </div>
     </body>

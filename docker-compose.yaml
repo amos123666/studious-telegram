@@ -8,3 +8,11 @@ services:
       dockerfile: ./docker/qna.dockerfile
     ports: 
       - 8080:8080
+  
+  nginx:
+    image: nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx.dockerfile
+    ports:
+      - 8081:80

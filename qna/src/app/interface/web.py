@@ -9,17 +9,18 @@ class MyServer(BaseHTTPRequestHandler):
     matcher: AbstractQuestionMatcher = None
 
     def do_GET(self):
-
         request_path = self.path.split('/')
 
-        if len(request_path) != 3:
+        print(f"Received request: {request_path}")
+
+        if len(request_path) != 4:
             self.send_response(404)
             self.send_header("Content-type", "text/plain")
             self.end_headers()
             self.wfile.write(bytes("Page not found.", "utf-8"))
             return
 
-        if request_path[1] != "question" or request_path[2] == "":
+        if request_path[1] != "api" or request_path[2] != "question" or request_path[3] == "":
             self.send_response(404)
             self.send_header("Content-type", "text/plain")
             self.end_headers()

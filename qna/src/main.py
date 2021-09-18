@@ -2,7 +2,7 @@ from app import App
 
 
 def main():
-    app = App()
+    app = App("UniversalEncoder", "web")
 
     app.start()
 

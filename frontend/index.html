@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Help Forum
+    </title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Help Forum</h1>
+        <div class="card">
+            <div class="form-group">
+                <label for="week">What semester week are we in (1-12)?</label>
+                <input type="text" id="week" name="week">
+            </div>
+            <div class="form-group">
+                <label for="askquestion">Enter a subject-line for your question:</label>
+                <input type="text" id="askquestion" name="askquestion" value="Help">
+            </div>
+            <div class="form-group"><button onclick="getSuggestions()">Go</button></div>
+        </div>
+        <div class="card" id="suggestions" style="display: none;"></div>
+
+        <script>
+            function onSuggestionClick(suggestionId) {
+                alert(suggestionId);
+            }
+
+            function getSuggestions() {
+                const res = await fetch("/api/question/exam help");
+                const data = await res.json();
+
+                suggestionCardElement = document.getElementById("suggestions");
+
+                suggestionCardElement.innerHTML = "";
+                suggestionCardElement.style.display = "block";
+
+                const weekText = document.getElementById("week").value;
+                const questionText = document.getElementById("askquestion").value;
+                const num = 10;
+                for (let i = 1; i <= num; i++) {
+                    let suggestionElement = document.createElement("div");
+                    suggestionElement.innerHTML = `Suggestions ${i} for ${questionText} in week ${weekText}`;
+                    suggestionElement.classList.add("suggestion");
+                    suggestionElement.onclick = () => onSuggestionClick(i);
+                    
+                    suggestionCardElement.appendChild(suggestionElement);
+                }
+
+            }
+        </script>
+    </div>
+
+</body>
+
+</html>

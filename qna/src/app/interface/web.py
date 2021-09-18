@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from socketserver import ThreadingMixIn
 from ..domain.questionmatcher import AbstractQuestionMatcher
 from urllib.parse import unquote
 import json
@@ -43,7 +44,9 @@ class MyServer(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(bytes(json.dumps(response), "utf-8"))
 
-
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    """This class allows to handle requests in separated threads.
+        No further content needed, don't touch this. """
 class WebInterface(AbstractUserInterface):
 
     def __init__(self, matcher) -> None:
@@ -57,13 +60,13 @@ class WebInterface(AbstractUserInterface):
         hostname = "0.0.0.0"
         server_port = 8080
 
-        webServer = HTTPServer((hostname, server_port), MyServer)
+        webServer = ThreadedHTTPServer((hostname, server_port), MyServer)
         print(f"Server started http://{hostname}:{server_port}")
 
         try:
             webServer.serve_forever()
         except KeyboardInterrupt:
-            pass
+            webServer.socket.close()
 
         webServer.server_close()
         print("Server stopped.")

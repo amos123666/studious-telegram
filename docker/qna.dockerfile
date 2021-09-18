@@ -8,4 +8,4 @@ COPY ./qna/src ./
 
 EXPOSE 8080
 
-CMD ["python", "main.py"]
+CMD ["python", "-u", "main.py"]

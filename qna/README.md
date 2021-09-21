@@ -6,6 +6,8 @@ This is the 'guts' of the project. This does the natural language processing (NL
 
 Requires python 3.8+
 
+Please also note the python modules required, listed [below](#requirements).
+
 ```
 python3 ./src/main.py
 ```
@@ -18,7 +20,7 @@ The project has been built with interfaces for the major components to allow for
 
 The `qna` module is structured as shown below. The 'user' interacts with the `interface` that then translates the request to a form that the model can process. The model gives suggestions based on the question, and then these suggestions are transmitted  back to the 'user' by the `interface`.
 
-![Architecture](../docs/diagrams/architecture.drawio.svg)
+![Architecture](../docs/diagrams/qnaarchitecture.drawio.svg)
 
 ### `AbstractQuestionMatcher`
 

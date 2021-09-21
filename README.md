@@ -3,7 +3,15 @@ Question and answer identifier for CITS2002
 
 # Structure
 
-Currently the project is made up of a single module, `qna`. The `qna` module is the guts of the project performing natural language processing to a given question to previously asked questions.
+The project currently has 3 components, `qna`, `frontend`, and `nginx`. 
+
+The `qna` module is the guts of the project performing natural language processing to compare a given question to previously asked questions. It can be run either as a web api, or as a run as a command line tool.
+
+The `frontend` module includes the markup and styles for the UI. Currently this is a fairly simple UI to illustrate how the backend could be utilised.
+
+The `nginx` module contains the configuration file for nginx. Nginx is a web server that can also be used as a reverse proxy. Here is it being used to serve the `frontend` module files and to reverse proxy any requests to the `qna` module.
+
+![Structure Diagram](./docs/diagrams/structure.drawio.svg)
 
 # Running the project
 
@@ -11,15 +19,14 @@ The project can be run in two ways.
 
 ### Locally like any other python project. 
 
-See instructions in the [`qna/README.md`](qna/README.md)
+See instructions in the [`qna/README.md`](qna/README.md). These instructions only explain how to run the project in the command line tool mode.
 
 ### In Docker
 
-With docker installed ([Get Docker](https://docs.docker.com/get-docker/)) run the follow commands in order. These commands might be different under windows.
+With docker installed ([Get Docker](https://docs.docker.com/get-docker/)) run the follow command
 
 ```
-docker build --file ./docker/qna.dockerfile -t qna .
-docker run -it qna
+docker-compose up --build
 ```
 
 Alternatively for UNIX based systems you can use the start script.
@@ -29,7 +36,6 @@ Alternatively for UNIX based systems you can use the start script.
 ```
 
 You might have to change the script permissions `chmod +x ./start.sh`
-
 
 
 # GitHub usage

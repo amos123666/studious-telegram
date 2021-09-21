@@ -2,31 +2,23 @@
 
 if [ $# -eq 0 ]
     then
-        docker build --file ./docker/qna.dockerfile -t qna .
-        docker run -it qna
+        docker-compose up
         exit 0
 fi
 
 if [ "$1" = "build" ]
     then
-        docker build --file ./docker/qna.dockerfile -t qna .
+        docker-compose up --build
         exit 0
 fi
 
-if [ "$1" = "start" ]
+if [ "$1" = "args" ]
     then
-        docker run -it qna
-        exit 0
-fi
-
-if [ "$1" = "test" ]
-    then
-        echo "No tests currently defined"
+        docker-compose up ${@:2}
         exit 0
 fi
 
 echo "Usage:"
-echo $0 "           Builds docker image and starts the container"
-echo $0 "build      Builds docker image"
-echo $0 "start      Starts the container"
-echo $0 "test       Runs tests and exits"
+echo $0 "           Starts the required images using docker compose"
+echo $0 "build      Builds and starts the required images using docker compose"
+echo $0 "args       Allows for the passing of additional flags to docker compose"

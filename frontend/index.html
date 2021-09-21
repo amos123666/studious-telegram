@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Help Forum</title>
+
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+
+    <body>
+        <div class="container">
+            <h1>Help Forum</h1>
+            <div class="card">
+                <div class="form-group">
+                    <label for="week"
+                        >What semester week are we in (1-12)?</label
+                    >
+                    <input type="text" id="week" name="week" />
+                </div>
+                <div class="form-group">
+                    <label for="askquestion"
+                        >Enter a subject-line for your question:</label
+                    >
+                    <input
+                        type="text"
+                        id="askquestion"
+                        name="askquestion"
+                        value="Lab 1 help"
+                        oninput="onQuestionInputChange()"
+                    />
+                </div>
+                <div class="form-group">
+                    <button onclick="getSuggestions()">Search</button>
+                </div>
+            </div>
+            <div class="card" id="suggestions"></div>
+
+            <script>
+                function onSuggestionClick(suggestionId) {
+                    console.log(suggestionId);
+                }
+
+                let fetchSuggestionsTimeout = null;
+
+                async function fetchSuggestions() {
+                    const weekText = document.getElementById("week").value;
+                    const questionText =
+                        document.getElementById("askquestion").value;
+
+                    const res = await fetch(`/api/question/${questionText}`);
+
+                    if (!res.ok) {
+                        return;
+                    }
+
+                    const data = await res.json();
+
+                    const matches = data.matches;
+
+                    suggestionCardElement =
+                        document.getElementById("suggestions");
+
+                    suggestionCardElement.innerHTML = "";
+
+                    const num = 10;
+                    for (let i = 1; i <= num; i++) {
+                        let suggestionElement = document.createElement("div");
+                        suggestionElement.innerHTML = matches[i];
+                        suggestionElement.classList.add("suggestion");
+                        suggestionElement.onclick = () => onSuggestionClick(i);
+
+                        suggestionCardElement.appendChild(suggestionElement);
+                    }
+                }
+
+                function onQuestionInputChange() {
+                    if (fetchSuggestionsTimeout) {
+                        clearTimeout(fetchSuggestionsTimeout);
+                    }
+
+                    fetchSuggestionsTimeout = setTimeout(fetchSuggestions, 190);
+                }
+
+                fetchSuggestions();
+            </script>
+        </div>
+    </body>
+</html>

@@ -1,5 +1,6 @@
 from ..domain import AbstractQuestionMatcher
 from .userinterface import AbstractUserInterface
+import time
 
 
 class BasicCLI(AbstractUserInterface):
@@ -69,11 +70,9 @@ class BasicCLI(AbstractUserInterface):
 
         while True:
             question = input("Please enter your question >> ")
-            text_question = input("Please explain your question >>")
             print("Loading....")
-            post = question + '.' + text_question
-            suggestions = self.__matcher.getSuggestions(post)
-
+            suggestions = self.__matcher.getSuggestions(
+                question, 'Subject_vec')
             print(f'QUESTIONS: {question}')
             for i in range(0, 10):
                 print(f"{i + 1}: {suggestions[i]}")
@@ -81,7 +80,27 @@ class BasicCLI(AbstractUserInterface):
             print()
             selected = input("Please enter the suggested question number >> ")
             print()
-            question_selected = suggestions[int(selected)-1]
 
-            self.print_question(question_selected)
-            self.print_answers(question_selected)
+            if(int(selected) > 0):
+                question_selected = suggestions[int(selected)-1]
+
+                self.print_question(question_selected)
+                self.print_answers(question_selected)
+            else:
+                text_question = input("Please explain your question >>")
+                post = question + '.' + text_question
+                suggestions = self.__matcher.getSuggestions(post, 'Text_vec')
+
+                print(f'QUESTIONS: {question}')
+                for i in range(0, 10):
+                    print(f"{i + 1}: {suggestions[i]}")
+
+                print()
+                selected = input(
+                    "Please enter the suggested question number >> ")
+                print()
+
+                if(int(selected) > 0):
+                    question_selected = suggestions[int(selected)-1]
+                    self.print_question(question_selected)
+                    self.print_answers(question_selected)

@@ -87,7 +87,7 @@ class BasicCLI(AbstractUserInterface):
             ).ask()
             week = questionary.text("What semester week is this (1-12)?").ask()
             question = questionary.text("What is your Question?").ask()
-            
+
             '''
             If the user does not ask a question i.e. presses enter with no questions,
             the program is exited. 
@@ -100,23 +100,31 @@ class BasicCLI(AbstractUserInterface):
             suggestions = self.__matcher.getSuggestions(question)
 
             print(f'QUESTIONS: {question}\n')
-            
+
             for i in range(len(suggestions)):
                 if i >= 10:
                     break
-                print(f"{i + 1}: {suggestions[i]}")   
+                author = "Student"
+                question = suggestions[i]
+                if(self.__questions[question]['From'] == "chris.mcdonald@uwa.edu.au"):
+                    author = "Lecturer"
+                if(self.__questions[question]['From'] == "poster013@student.uwa.edu.au"):
+                    author = "Tutor"
+                print(f"{i + 1}: {suggestions[i]} ({author})")
             print("")
 
             if questionary.confirm("Would you like to view these suggestions?").ask():
-                questionary.checkbox(
+                num = questionary.checkbox(
                     'Select questions',
-                    choices=
-                        suggestions[:10]
-                    ).ask()
+                    choices=suggestions[:10]
+                ).ask()
+                print(num)
+                self.print_question(num[0])
+                self.print_answers(num[0])
 
                 '''
                 show the user the contents 
-                '''     
+                '''
             if not questionary.confirm("Would you like to ask another question?").ask():
                 print("\nThank you for using our program :)\n")
                 break

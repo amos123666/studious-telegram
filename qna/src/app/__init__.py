@@ -10,9 +10,10 @@ class App():
 
         # Uncomment this if you want to create a new json file
         '''
-        questions, answers = parseQuestionsAnswersFromFile(
+        questions = parseQuestionsAnswersFromFile(
             'app/testfiles/help2002-2017.txt')
         '''
+
         json = JsonLoader('app/storage/questions2017_UE.json')
         questions = json.read_data()
 
@@ -30,7 +31,8 @@ class App():
         elif target_interface == "web":
             self.__interface = WebInterface(questionMatcher)
         else:
-            raise ValueError(f"target_interface ({target_interface}) is not valid")
+            raise ValueError(
+                f"target_interface ({target_interface}) is not valid")
 
     def start(self) -> None:
         self.__interface.start()

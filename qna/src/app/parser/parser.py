@@ -16,7 +16,7 @@ def parseQuestionsAnswersFromFile(filePath: str):
     threads = parseThreadsFromFile(filePath)
     getPostsFromThreads(threads)
 
-    
+
 def parseThreadsFromFile(filePath: str):
     '''
     Arranges the contents of a file into separate threads (ie. an individual 
@@ -97,5 +97,4 @@ def get_vectors(question):
     module_url = "https://tfhub.dev/google/universal-sentence-encoder/4"
     model = hub.load(module_url)
     vec = model([question])[0]
-    vec = tf.reshape(vec, (-1, 1))
     return vec

@@ -9,9 +9,7 @@ class App():
 
     def __init__(self, target_model, target_interface) -> None:
 
-        # Uncomment this if you want to create a new json file
-
-        if len(os.listdir('/app/testfiles')) == 0:
+        if len(os.listdir("app/storage")) == 0:
             questions = parseQuestionsAnswersFromFile(
                 'app/testfiles/help2002-2017.txt')
 

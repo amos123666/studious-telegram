@@ -8,6 +8,7 @@ import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import numpy as np
+import time
 
 
 def parseQuestionsAnswersFromFile(filePath: str):
@@ -68,8 +69,12 @@ def getPostsFromThreads(threads):
     model2 = T5ForConditionalGeneration.from_pretrained("t5-small")
     tokenizer = T5Tokenizer.from_pretrained("t5-small")
     print("Finished Loading T5 model")
+
+    start = time.time()
     embeddings_text = model([email.message_from_string(i)['Subject'] + get_summarisation(
         email.message_from_string(i)._payload, tokenizer, model2) for i in threads])
+    end = time.time() - start
+    print(end)
     print("Finished t5 Embeddings")
 
     questions = {}

@@ -2,11 +2,17 @@ import email
 import tensorflow as tf
 import tensorflow_hub as hub
 import json
+from transformers import T5ForConditionalGeneration, T5Tokenizer
+import string
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+import numpy as np
 
 
 def parseQuestionsAnswersFromFile(filePath: str):
     '''
-    Returns a dictionary containing each question in filePath, and a 
+    Returns a dictionary containing each question in filePath, and a
     dictionary containing each answer in filePath.
 
     :param filePath: File to be parsed
@@ -19,7 +25,7 @@ def parseQuestionsAnswersFromFile(filePath: str):
 
 def parseThreadsFromFile(filePath: str):
     '''
-    Arranges the contents of a file into separate threads (ie. an individual 
+    Arranges the contents of a file into separate threads (ie. an individual
     question or answer) that are stored as list items.
 
     :param filePath: File to be parsed
@@ -51,6 +57,21 @@ def getPostsFromThreads(threads):
     :param threads: List of question/answer strings
     :return None:
     '''
+
+    module_url = "https://tfhub.dev/google/universal-sentence-encoder/4"
+    model = hub.load(module_url)
+    print("Finished Loading Universal Encoder")
+    embeddings_questions = model(
+        [email.message_from_string(i)['Subject'] for i in threads])
+    print("Finished Universal Encoder Embeddings")
+
+    model2 = T5ForConditionalGeneration.from_pretrained("t5-small")
+    tokenizer = T5Tokenizer.from_pretrained("t5-small")
+    print("Finished Loading T5 model")
+    embeddings_text = model([email.message_from_string(i)['Subject'] + get_summarisation(
+        email.message_from_string(i)._payload, tokenizer, model2) for i in threads])
+    print("Finished t5 Embeddings")
+
     questions = {}
 
     for i in range(0, len(threads)):
@@ -59,8 +80,9 @@ def getPostsFromThreads(threads):
 
         if msg['Subject'] not in questions.keys():
 
-            vec = get_vectors(msg['Subject'])
-            vec = vec.numpy().tolist()
+            text_vec = embeddings_text[i].numpy().tolist()
+            vec = embeddings_questions[i].numpy().tolist()
+
             questions[msg['Subject']] = {'Date': msg['Date'],
                                          'To': msg['To'],
                                          'Received': msg['Received'],
@@ -69,7 +91,7 @@ def getPostsFromThreads(threads):
                                          'X-smile': msg['X-smile'],
                                          'X-img': msg['X-img'],
                                          'Text': msg._payload,
-                                         'Text_vec': [0],
+                                         'Text_vec': text_vec,
                                          'Answers': [],
                                          }
         else:
@@ -82,19 +104,46 @@ def getPostsFromThreads(threads):
                                                          'X-img': msg['X-img'],
                                                          'Text': msg._payload,
                                                          })
-    with open('app/storage/questions2017_UE.json', 'w') as outfile:
+    with open('app/storage/questions2017_Universal_Encoder.json', 'w') as outfile:
         json.dump(questions, outfile, indent=4)
     print("Finished loading Json...")
 
 
-def get_vectors(question):
-    '''
-    Vectorises the subject-line of the given question.
+def get_summarisation(data, tokenizer, model):
+    input = tokenizer.encode(data, return_tensors="pt",
+                             max_length=512, truncation=True)
+    # generate the summarization output
+    outputs = model.generate(
+        input,
+        max_length=50,
+        min_length=30,
+        length_penalty=2.0,
+        num_beams=4,
+        early_stopping=True)
+    # just for debugging
+    return tokenizer.decode(outputs[0])
 
-    :param question: Element of question dictionary
-    :return vec: Sentence vector for question
+
+def preprocess(data):
     '''
-    module_url = "https://tfhub.dev/google/universal-sentence-encoder/4"
-    model = hub.load(module_url)
-    vec = model([question])[0]
-    return vec
+    # I still don't know if I will use htis now.
+    '''
+
+    # Tokenize question and remove punctuation and lower strings
+    data = word_tokenize(data)
+    data = [i for i in data if i not in string.punctuation]
+    data = [i.lower() for i in data]
+
+    # Convert words to stem form
+    # e.g. 'playing' is converted to 'play'
+    lemmatizer = WordNetLemmatizer()
+    data = [lemmatizer.lemmatize(i) for i in data]
+
+    # Remove stopwords as they don't add value to the sentence meaning
+    # and select only the top 10 stop words.
+    # e.g. 'the' is not a valuable word
+    stopwords = nltk.corpus.stopwords.words('english')
+    stopwords = stopwords[0:10]
+    data = [i for i in data if i not in stopwords]
+
+    return "".jdata

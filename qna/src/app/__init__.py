@@ -1,7 +1,8 @@
-from app.interface import BasicCLI, WebInterface
-from app.domain import UniversalEncoder, SentBERT, Doc2Vec
-from app.parser import parseQuestionsAnswersFromFile
-from app.parser import JsonLoader
+from .interface import BasicCLI, WebInterface
+from .domain import UniversalEncoder, SentBERT, Doc2Vec, T5
+from .parser import parseQuestionsAnswersFromFile
+from .parser import JsonLoader
+import os
 
 
 class App():
@@ -9,15 +10,14 @@ class App():
     def __init__(self, target_model, target_interface) -> None:
 
         # Uncomment this if you want to create a new json file
-        '''
-        questions = parseQuestionsAnswersFromFile(
-            'app/testfiles/help2002-2017.txt')
-        '''
 
-        json = JsonLoader('app/storage/questions2017_UE.json')
-        questions = json.read_data()
+        if len(os.listdir('/app/testfiles')) == 0:
+            questions = parseQuestionsAnswersFromFile(
+                'app/testfiles/help2002-2017.txt')
 
         if target_model == "UniversalEncoder":
+            json = JsonLoader('app/storage/CITS2002_2021.json')
+            questions = json.read_data()
             questionMatcher = UniversalEncoder(questions)
         elif target_model == "BERT":
             questionMatcher = SentBERT(questions)
@@ -27,7 +27,8 @@ class App():
             raise ValueError(f"targetModel ({target_model}) is not valid")
 
         if target_interface == "cli":
-            self.__interface = BasicCLI(questionMatcher, questions)
+            summariser = T5()
+            self.__interface = BasicCLI(questionMatcher, summariser, questions)
         elif target_interface == "web":
             self.__interface = WebInterface(questionMatcher)
         else:

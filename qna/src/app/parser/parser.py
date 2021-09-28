@@ -1,16 +1,10 @@
-import time
 from typing import List, Tuple
 import numpy as np
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 import nltk
 import string
-from transformers import T5ForConditionalGeneration, T5Tokenizer
 import email
-import tensorflow as tf
-import tensorflow_hub as hub
-import json
-from.json_loader import JsonLoader
 
 def parseQuestionsAnswersFromFile(filePath: str):
     '''

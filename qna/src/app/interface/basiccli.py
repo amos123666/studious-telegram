@@ -13,7 +13,7 @@ class BasicCLI(AbstractUserInterface):
     '''
     __matcher: AbstractQuestionMatcher = None
 
-    def __init__(self, matcher: AbstractQuestionMatcher, summariser: AbstractSummarisation, questions):
+    def __init__(self, matcher: AbstractQuestionMatcher, summariser: AbstractSummarisation, questions, target_model: str):
         '''
         Constructor for the BasicCLI class.
 
@@ -23,6 +23,7 @@ class BasicCLI(AbstractUserInterface):
         self.setQuestionMatcher(matcher)
         self.setSummarisation(summariser)
         self.__questions = questions
+        self.__model = target_model
 
     def setQuestionMatcher(self, matcher: AbstractQuestionMatcher):
         self.__matcher = matcher
@@ -108,7 +109,6 @@ class BasicCLI(AbstractUserInterface):
             print("\nLoading Suggestions....\n")
             suggestions, title_vec = self.__matcher.getSuggestions(
                 question, False)
-            title_vec = title_vec.numpy().tolist()
 
             print(f'QUESTIONS: {question}\n')
 
@@ -172,8 +172,10 @@ class BasicCLI(AbstractUserInterface):
                             self.print_question(num[0])
                             self.print_answers(num[0])
                     if not flag:
+                        title_vec = title_vec.numpy().tolist()
                         text_vec = text_vec.numpy().tolist()
-                        write_to_json(question, body_text, title_vec, text_vec)
+                        write_to_json(question, body_text,
+                                      title_vec, text_vec, self.__model)
 
             if not questionary.confirm("Would you like to ask another question?").ask():
                 print("\nThank you for using our program :)\n")

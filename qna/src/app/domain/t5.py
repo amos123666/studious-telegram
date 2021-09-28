@@ -5,13 +5,14 @@ from transformers import T5ForConditionalGeneration, T5Tokenizer
 class T5(AbstractSummarisation):
 
     def __init__(self):
-        self.__tokenizer = T5ForConditionalGeneration.from_pretrained(
+        self.__tokenizer = T5Tokenizer.from_pretrained("t5-base")
+        self.__model = T5ForConditionalGeneration.from_pretrained(
             "t5-base")
-        self.__model = T5Tokenizer.from_pretrained("t5-base")
 
     def getSummarisations(self, question: str):
 
-        inputs = self.__tokenizer.encode(question,
+        data = "summarize: "+question
+        inputs = self.__tokenizer.encode(data,
                                          return_tensors='pt',
                                          max_length=512,
                                          truncation=True)
@@ -24,4 +25,4 @@ class T5(AbstractSummarisation):
             num_beams=4,
             early_stopping=True)
 
-        return self.__tokenizer.decode(outputs[0])
+        return self.__tokenizer.decode(outputs[0], skip_special_tokens=True)

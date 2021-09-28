@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Tuple
 
 
 class AbstractQuestionMatcher(ABC):
@@ -9,5 +9,5 @@ class AbstractQuestionMatcher(ABC):
     all abstract methods."""
 
     @abstractmethod
-    def getSuggestions(self, question: str, text_vec: bool) -> List[str]:
+    def getSuggestions(self, question: str, text_vec: bool) -> List[Tuple[str, float]]:
         pass

@@ -5,7 +5,7 @@ import tensorflow_hub as hub
 from scipy.spatial.distance import cosine
 import operator
 
-from typing import List
+from typing import List, Tuple
 
 
 class UniversalEncoder(AbstractQuestionMatcher):
@@ -28,7 +28,8 @@ class UniversalEncoder(AbstractQuestionMatcher):
         self.__question_list = list(questions.keys())
         #self.__sentence_embeddings = self.__model(self.__question_list)
 
-    def getSuggestions(self, question: str, text_vec=True) -> List[str]:
+
+    def getSuggestions(self, question: str, text_vec=True) -> List[Tuple[str, float]]:
         '''
         Determines question suggestions for a given question, based on the 
         similarity of their subject-line.
@@ -62,4 +63,4 @@ class UniversalEncoder(AbstractQuestionMatcher):
         similarity_dict = sorted(similarity_dict.items(),
                                  key=operator.itemgetter(1), reverse=True)
 
-        return [k[0] for k in similarity_dict], query_embedding
+        return similarity_dict, query_embedding

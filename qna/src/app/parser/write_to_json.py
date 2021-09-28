@@ -4,7 +4,7 @@ from .json_loader import JsonLoader
 import datetime
 
 
-def write_to_json(title, question, title_vec, text_vec):
+def write_to_json(title, question, title_vec, text_vec, target_model):
 
     date = datetime.datetime.now()
     date = date.strftime("%c")
@@ -12,7 +12,7 @@ def write_to_json(title, question, title_vec, text_vec):
     '''
     this will need to be changed so that we dont keep loading in the json file.
     '''
-    file = JsonLoader('app/storage/CITS2002_2021.json')
+    file = JsonLoader(f'app/storage/questions2017_{target_model}.json')
     questions = file.read_data()
     questions[title] = {'Date': date,
                         'To': "help2002@csse.uwa.edu.au",
@@ -26,6 +26,6 @@ def write_to_json(title, question, title_vec, text_vec):
                         'Answers': [],
                         }
 
-    with open('app/storage/CITS2002_2021.json', 'w') as outfile:
-        json.dump(questions, outfile, indent=4)
+    with open(f'app/storage/questions2017_{target_model}.json', 'w') as outfile:
+        json.dump(questions, outfile)
     print("Finished writing to Json...")

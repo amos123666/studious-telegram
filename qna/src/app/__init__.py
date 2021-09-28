@@ -22,12 +22,17 @@ class App():
 
         # Find the first file that contains the target model
         else:
+            flag = False
             for file in os.listdir('app/storage'):
                 if target_model in file:
                     file = f'app/storage/{file}'
                     json = JsonLoader(file)
                     questions = json.read_data()
+                    flag = True
                     break
+            if not flag:
+                questions = parseQuestionsAnswersFromFile(
+                    'app/testfiles/help2002-2017.txt', target_model)
 
         if target_model == "UniversalEncoder":
             questionMatcher = UniversalEncoder(questions)

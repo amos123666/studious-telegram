@@ -15,19 +15,23 @@ class UniversalEncoder(AbstractQuestionMatcher):
     '''
     MODULE_URL = "https://tfhub.dev/google/universal-sentence-encoder/4"
 
-    def __init__(self, questions):
+    def __init__(self):
         '''
         Constructor for the UniversalEncoder class.
 
         :param self: Instance of the UniversalEncoder object
-        :param questions: Dictionary of question threads
         '''
-        # Load the model and pass in questions as a list to get embeddings
-        self.__model = hub.load(self.MODULE_URL)
-        self.__questions = questions
-        self.__question_list = list(questions.keys())
-        #self.__sentence_embeddings = self.__model(self.__question_list)
 
+        self.__model = hub.load(self.MODULE_URL)
+        self.__questions = []
+        self.__bodies = []
+        self.__question_embeddings = []
+
+    def addQuestions(self, questions: List[str], bodies: List[str]) -> None:
+        self.__questions += questions
+        self.__bodies += bodies
+        self.__question_embeddings += [tf.reshape(embedding, (-1, 1))
+                                       for embedding in self.__model(questions)]
 
     def getSuggestions(self, question: str, text_vec=True) -> List[Tuple[str, float]]:
         '''
@@ -40,27 +44,20 @@ class UniversalEncoder(AbstractQuestionMatcher):
             question dictionary ordered from most similar to least
         '''
         # Pass the asked question into model to get embedding
-        question = preprocess(question)
+        # question = preprocess(question)
         query_embedding = self.__model([question])[0]
         query_embedding = tf.reshape(query_embedding, (-1, 1))
 
         # Loop through the sentence embedding of each question, finding the cosine
         # between this and the embedding of the asked question
-        similarity_dict = {}
-        for i, subject in enumerate(self.__questions.keys()):
-            if text_vec:
-                sentence_embedding = tf.reshape(
-                    self.__questions[subject]['Text_vec'], (-1, 1))
-                similarity_dict[self.__question_list[i]] = 1 - \
-                    cosine(sentence_embedding, query_embedding)
-            else:
-                sentence_embedding = tf.reshape(
-                    self.__questions[subject]['Subject_vec'], (-1, 1))
-                similarity_dict[self.__question_list[i]] = 1 - \
-                    cosine(sentence_embedding, query_embedding)
+        suggestions = []
+        for i, question in enumerate(self.__questions):
+            question_embedding = self.__question_embeddings[i]
+
+            suggestions.append(
+                (question, 1 - cosine(question_embedding, query_embedding)))
 
         # Order dictionary to a list, such that higher cosines are first
-        similarity_dict = sorted(similarity_dict.items(),
-                                 key=operator.itemgetter(1), reverse=True)
+        suggestions.sort(key=operator.itemgetter(1), reverse=True)
 
-        return similarity_dict, query_embedding
+        return suggestions

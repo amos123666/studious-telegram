@@ -1,3 +1,5 @@
+import sys
+import math
 from abc import ABC, abstractmethod
 from typing import List, Tuple
 
@@ -9,5 +11,11 @@ class AbstractQuestionMatcher(ABC):
     all abstract methods."""
 
     @abstractmethod
-    def getSuggestions(self, question: str, text_vec: bool) -> List[Tuple[str, float]]:
+    def getSuggestions(self, question: str,
+                       text_vec: bool) -> List[Tuple[str, float]]:
+        pass
+
+    @abstractmethod
+    def addQuestions(self, questions: List[str], bodies: List[str]) -> None:
+        """Adds the given question to the Question Matcher so it can be returned as a suggestion."""
         pass

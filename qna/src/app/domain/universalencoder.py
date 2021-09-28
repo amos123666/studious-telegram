@@ -40,8 +40,7 @@ class UniversalEncoder(AbstractQuestionMatcher):
         '''
         # Pass the asked question into model to get embedding
         question = preprocess(question)
-        print(question)
-        query_embedding = self.__model(question)[0]
+        query_embedding = self.__model([question])[0]
         query_embedding = tf.reshape(query_embedding, (-1, 1))
 
         # Loop through the sentence embedding of each question, finding the cosine

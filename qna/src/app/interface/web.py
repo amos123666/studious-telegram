@@ -39,7 +39,7 @@ class TornadoWebInterface(AbstractUserInterface):
 
     def start(self) -> None:
         app = tornado.web.Application([
-            (r"/api/question/([^/]+)", QuestionHandler, {"questionMatcher": self.__questionMatcher})
+            (r"/api/suggestion/([^/]+)", QuestionHandler, {"questionMatcher": self.__questionMatcher})
         ])
 
         app.listen(self.__port)

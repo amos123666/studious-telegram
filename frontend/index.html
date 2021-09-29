@@ -1,120 +1,119 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Help Forum</title>
 
-<head>
-  <title>Help Forum</title>
+    <link rel="stylesheet" href="styles/styles.css" />
+  </head>
 
-  <link rel="stylesheet" href="styles/styles.css" />
-</head>
-
-<body>
-  <div class="container">
-    <h1>Help Forum</h1>
-    <div class="row">
-      <div class="card card--question">
-        <h2>Question</h2>
-        <div class="form-group">
-          <label for="askquestion">Subject</label>
-          <input type="text" id="askquestion" name="askquestion" placeholder="Question Subject"
-            oninput="onQuestionInputChange()" />
+  <body>
+    <div class="container">
+      <h1>Help Forum</h1>
+      <div class="row">
+        <div class="card card--question">
+          <h2>Question</h2>
+          <div class="form-group">
+            <label for="askquestion">Subject</label>
+            <input
+              type="text"
+              id="askquestion"
+              name="askquestion"
+              placeholder="Question Subject"
+              oninput="onQuestionInputChange()"
+            />
+          </div>
+          <div class="form-group">
+            <label for="question-body">Body</label>
+            <textarea type="text" id="question-body" name="question-body" placeholder="Question Body"></textarea>
+          </div>
+          <div class="form-group form-group--inline">
+            <button class="btn btn--green push-right" onclick="">Submit</button>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="question-body">Body</label>
-          <textarea type="text" id="question-body" name="question-body" placeholder="Question Body"></textarea>
-        </div>
-        <div class="form-group form-group--inline">
-          <button class="btn btn--green push-right" onclick="">Submit</button>
-        </div>
-      </div>
-      <div class="card card--suggestions">
-        <h2>Suggestions</h2>
-        <div id="suggestions"></div>
-      </div>
-    </div>
-  </div>
-  <div class="modal" id="question-modal" onclick="closeModal()">
-    <div class="modal--content" onclick="event.stopPropagation()">
-      <div class="modal--heading">
-        <h2>How do I use pointers?</h2>
-      </div>
-      <div class="modal--body">
-        <p>
-          My Modal body! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque assumenda earum sit
-          veritatis
-          ratione officiis velit nemo incidunt doloribus vero, aspernatur in eligendi corporis amet iusto fugiat quasi
-          consequuntur sapiente hic tenetur eius dolore deserunt dolores voluptatibus! Voluptatum fugit nostrum
-          inventore.
-          Minus dicta quaerat nesciunt quisquam vitae enim, aspernatur inventore?
-        </p>
-      </div>
-      <div class="modal--footer">
-        <div class="form-group form-group--inline">
-          <button class="btn btn--green" onclick="">View answers</button>
-          <button class="btn push-right" onclick="closeModal()">Close</button>
+        <div class="card card--suggestions">
+          <h2>Suggestions</h2>
+          <div id="suggestions"></div>
         </div>
       </div>
     </div>
-  </div>
-  <script>
-    function onSuggestionClick(suggestionId) {
-      console.log(suggestionId);
-      openModal();
-    }
-
-    let fetchSuggestionsTimeout = null;
-
-    async function fetchSuggestions() {
-      const questionSubject =
-        document.getElementById("askquestion").value || "Help";
-
-      const res = await fetch(`/api/question/${questionSubject}`);
-
-      if (!res.ok) {
-        return;
+    <div class="modal" id="question-modal" onclick="closeModal()">
+      <div class="modal--content" onclick="event.stopPropagation()">
+        <div class="modal--heading">
+          <h2>How do I use pointers?</h2>
+        </div>
+        <div class="modal--body">
+          <p>
+            My Modal body! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque assumenda earum sit
+            veritatis ratione officiis velit nemo incidunt doloribus vero, aspernatur in eligendi corporis amet iusto
+            fugiat quasi consequuntur sapiente hic tenetur eius dolore deserunt dolores voluptatibus! Voluptatum fugit
+            nostrum inventore. Minus dicta quaerat nesciunt quisquam vitae enim, aspernatur inventore?
+          </p>
+        </div>
+        <div class="modal--footer">
+          <div class="form-group form-group--inline">
+            <button class="btn btn--green" onclick="">View answers</button>
+            <button class="btn push-right" onclick="closeModal()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function onSuggestionClick(suggestionId) {
+        console.log(suggestionId);
+        openModal();
       }
 
-      const data = await res.json();
+      let fetchSuggestionsTimeout = null;
 
-      const matches = data.matches;
+      async function fetchSuggestions() {
+        const questionSubject = document.getElementById("askquestion").value || "Help";
 
-      suggestionCardElement =
-        document.getElementById("suggestions");
+        const res = await fetch(`/api/suggestions/${questionSubject}`);
 
-      suggestionCardElement.innerHTML = "";
+        if (!res.ok) {
+          return;
+        }
 
-      const num = 10;
-      for (let i = 0; i < num; i++) {
-        let suggestionElement = document.createElement("div");
-        suggestionElement.innerHTML = matches[i].question;
-        suggestionElement.classList.add("suggestion");
-        suggestionElement.onclick = () => onSuggestionClick(i);
+        const data = await res.json();
 
-        suggestionCardElement.appendChild(suggestionElement);
+        const matches = data.matches;
+
+        suggestionCardElement = document.getElementById("suggestions");
+
+        suggestionCardElement.innerHTML = "";
+
+        const num = 10;
+        for (let i = 0; i < num; i++) {
+          let suggestionElement = document.createElement("div");
+          suggestionElement.innerHTML = matches[i].question;
+          suggestionElement.classList.add("suggestion");
+          suggestionElement.onclick = () => onSuggestionClick(i);
+
+          suggestionCardElement.appendChild(suggestionElement);
+        }
       }
-    }
 
-    function onQuestionInputChange() {
-      if (fetchSuggestionsTimeout) {
-        clearTimeout(fetchSuggestionsTimeout);
+      function onQuestionInputChange() {
+        if (fetchSuggestionsTimeout) {
+          clearTimeout(fetchSuggestionsTimeout);
+        }
+
+        fetchSuggestionsTimeout = setTimeout(fetchSuggestions, 190);
       }
 
-      fetchSuggestionsTimeout = setTimeout(fetchSuggestions, 190);
-    }
+      fetchSuggestions();
 
-    fetchSuggestions();
+      function openModal() {
+        const modal = document.getElementById("question-modal");
 
-    function openModal() {
-      const modal = document.getElementById("question-modal");
+        modal.style.display = "flex";
+      }
 
-      modal.style.display = "flex";
-    }
+      function closeModal() {
+        const modal = document.getElementById("question-modal");
 
-    function closeModal() {
-      const modal = document.getElementById("question-modal");
-
-      modal.style.display = "none";
-    }
-  </script>
-</body>
-
+        modal.style.display = "none";
+      }
+    </script>
+  </body>
 </html>

@@ -81,7 +81,7 @@ def getPostsFromThreads(threads, target_model):
             text = email.message_from_string(i)._payload
             preprocessed_subjects.append(p)
             sum = get_summarisation(text, tokenizer, model2)
-            final_sum = p + sum
+            final_sum = sum
             preprocessed_texts.append(final_sum)
         s.add(subject)
 

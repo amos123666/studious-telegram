@@ -1,4 +1,3 @@
-import re
 from typing import Awaitable, Optional
 import urllib.parse
 import json

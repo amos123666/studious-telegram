@@ -5,6 +5,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: "Roboto", sans-serif;
+    position: relative;
+    height: 100%;
 }
 
 h1 {
@@ -12,10 +14,19 @@ h1 {
     font-size: 3rem;
 }
 
+h2 {
+  font-weight: bolder;
+}
+
+p {
+  color: #333;
+}
+
 .row {
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .row > * {
@@ -23,7 +34,6 @@ h1 {
 }
 
 .container {
-    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -33,7 +43,11 @@ h1 {
 .form-group {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
+}
+
+.form-group.form-group--inline {
+  flex-direction: row;
 }
 
 .form-group + .form-group {
@@ -41,55 +55,66 @@ h1 {
 }
 
 .form-group > * + * {
-    margin-top: 0.5em;
+  margin-block: 0.5em;
 }
 
-.form-group > input {
-    padding: 1em;
-    margin: 1em;
+.form-group > label {
+  font-weight: bolder;
+}
 
-    border-radius: 2em;
+input {
+    padding: 1em;
+
+    border-radius: 0.12em;
     border: #555;
     border-style: solid;
     border-width: 1px;
 
-    flex: 1 1 auto;
+    font-family: "Roboto", sans-serif;
 }
 
-.form-group > input:focus {
+input:focus {
     outline: none;
 }
 
-.form-group > button {
-    display: inline-block;
-    padding: 0.35em 1.2em;
-    border: 0.1em solid #000;
-    margin: 0 0.3em 0.3em 0;
-    border-radius: 0.12em;
-    box-sizing: border-box;
-    text-decoration: none;
-    font-family: "Roboto", sans-serif;
-    font-weight: 300;
-    color: #000;
-    text-align: center;
-    transition: all 0.2s;
-    background-color: #0000;
+.btn {
+  display: inline-block;
+  padding: 0.35em 1.2em;
+  border: 0.1em solid var(--btn-color, black);
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-size: 1em;
+  color: var(--btn-color, black);
+  text-align: center;
+  transition: all 0.2s;
+  background-color: #0000;
 }
 
-.form-group > button:hover {
-    color: #fff;
-    background-color: #000;
+.btn:hover {
+  color: #fff;
+  background-color: var(--btn-color, black);
 }
 
-.form-group > textarea {
-  flex: 1 1 auto;
-  height: 6em;
+.btn--green {
+  --btn-color: darkgreen;
+}
+
+textarea {
+  min-height: 6em;
   padding: 1em;
   
-  border-radius: 2em;
+  border-radius: 0.12em;
   border: #555;
   border-style: solid;
   border-width: 1px;
+
+  resize: vertical;
+
+  font-family: "Roboto", sans-serif;
 }
 
 .card {
@@ -141,4 +166,43 @@ h1 {
 
 .suggestion:active::after {
     opacity: 0.8 !important;
+}
+
+.modal {
+  position: absolute;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background: #00000070;
+}
+
+.modal--content {
+  background-color: white;
+  width: min(40em, 70%);
+  align-items: center;
+  height: max-content;
+
+  box-shadow: 0px 0px 1em -0.5em #00000070;
+  border-radius: 1em;
+}
+
+.modal--heading, .modal--footer {
+  padding-inline: 1.5em;
+  padding-block: 2em;
+}
+
+.modal--heading > h2 {
+  margin: 0;
+}
+
+.modal--body {
+  padding-inline: 1.5em;
+  padding-block: 1em;
+  border-block: 1px solid #aaa;
+}
+
+.push-right {
+  margin-left: auto;
 }

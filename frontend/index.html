@@ -4,7 +4,7 @@
 <head>
   <title>Help Forum</title>
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles/styles.css" />
 </head>
 
 <body>
@@ -21,58 +21,96 @@
           <label for="question-body">Body</label>
           <textarea type="text" id="question-body" name="question-body" placeholder="Question Body"></textarea>
         </div>
+        <div class="form-group form-group--inline">
+          <button class="btn btn--green push-right" onclick="">Submit</button>
+        </div>
       </div>
       <div class="card card--suggestions" id="suggestions"></div>
     </div>
-
-    <script>
-      function onSuggestionClick(suggestionId) {
-        console.log(suggestionId);
-      }
-
-      let fetchSuggestionsTimeout = null;
-
-      async function fetchSuggestions() {
-        const questionSubject =
-          document.getElementById("askquestion").value || "Help";
-
-        const res = await fetch(`/api/question/${questionSubject}`);
-
-        if (!res.ok) {
-          return;
-        }
-
-        const data = await res.json();
-
-        const matches = data.matches;
-
-        suggestionCardElement =
-          document.getElementById("suggestions");
-
-        suggestionCardElement.innerHTML = "";
-
-        const num = 10;
-        for (let i = 0; i < num; i++) {
-          let suggestionElement = document.createElement("div");
-          suggestionElement.innerHTML = matches[i].question;
-          suggestionElement.classList.add("suggestion");
-          suggestionElement.onclick = () => onSuggestionClick(i);
-
-          suggestionCardElement.appendChild(suggestionElement);
-        }
-      }
-
-      function onQuestionInputChange() {
-        if (fetchSuggestionsTimeout) {
-          clearTimeout(fetchSuggestionsTimeout);
-        }
-
-        fetchSuggestionsTimeout = setTimeout(fetchSuggestions, 190);
-      }
-
-      fetchSuggestions();
-    </script>
   </div>
+  <div class="modal" id="question-modal" onclick="closeModal()">
+    <div class="modal--content" onclick="event.stopPropagation()">
+      <div class="modal--heading">
+        <h2>How do I use pointers?</h2>
+      </div>
+      <div class="modal--body">
+        <p>
+          My Modal body! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque assumenda earum sit
+          veritatis
+          ratione officiis velit nemo incidunt doloribus vero, aspernatur in eligendi corporis amet iusto fugiat quasi
+          consequuntur sapiente hic tenetur eius dolore deserunt dolores voluptatibus! Voluptatum fugit nostrum
+          inventore.
+          Minus dicta quaerat nesciunt quisquam vitae enim, aspernatur inventore?
+        </p>
+      </div>
+      <div class="modal--footer">
+        <div class="form-group form-group--inline">
+          <button class="btn btn--green" onclick="">View answers</button>
+          <button class="btn push-right" onclick="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function onSuggestionClick(suggestionId) {
+      console.log(suggestionId);
+      openModal();
+    }
+
+    let fetchSuggestionsTimeout = null;
+
+    async function fetchSuggestions() {
+      const questionSubject =
+        document.getElementById("askquestion").value || "Help";
+
+      const res = await fetch(`/api/question/${questionSubject}`);
+
+      if (!res.ok) {
+        return;
+      }
+
+      const data = await res.json();
+
+      const matches = data.matches;
+
+      suggestionCardElement =
+        document.getElementById("suggestions");
+
+      suggestionCardElement.innerHTML = "";
+
+      const num = 10;
+      for (let i = 0; i < num; i++) {
+        let suggestionElement = document.createElement("div");
+        suggestionElement.innerHTML = matches[i].question;
+        suggestionElement.classList.add("suggestion");
+        suggestionElement.onclick = () => onSuggestionClick(i);
+
+        suggestionCardElement.appendChild(suggestionElement);
+      }
+    }
+
+    function onQuestionInputChange() {
+      if (fetchSuggestionsTimeout) {
+        clearTimeout(fetchSuggestionsTimeout);
+      }
+
+      fetchSuggestionsTimeout = setTimeout(fetchSuggestions, 190);
+    }
+
+    fetchSuggestions();
+
+    function openModal() {
+      const modal = document.getElementById("question-modal");
+
+      modal.style.display = "flex";
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("question-modal");
+
+      modal.style.display = "none";
+    }
+  </script>
 </body>
 
 </html>

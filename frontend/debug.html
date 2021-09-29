@@ -1,125 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="debug-styles.css" />
-        <title>Debug View</title>
-    </head>
-    <body>
-        <div class="nav">
-            <div class="form-group">
-                <label for="askquestion">
-                    Enter a subject-line for your question:
-                </label>
-                <input
-                    type="text"
-                    id="askquestion"
-                    name="askquestion"
-                    value="Lab 1 help"
-                    oninput="onQuestionInputChange()"
-                />
-            </div>
-            <div class="form-group">
-                <label for="similarity-slider">Min similarity:</label>
-                <input
-                    type="range"
-                    id="similarity-slider"
-                    name="similarity-slider"
-                    min="-1"
-                    max="1"
-                    value="0"
-                    step="0.01"
-                    oninput="onSimilaritySliderChange()"
-                />
-                <span id="slider-label"> 0.00 </span>
-            </div>
-        </div>
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Suggestion</th>
-                        <th>Similarity</th>
-                    </tr>
-                </thead>
-                <tbody id="suggestiontable">
-                    <tr>
-                        <td>Question</td>
-                        <td>1.0</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
 
-        <script>
-            let fetchSuggestionsTimeout = null;
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles/debug-styles.css" />
+  <title>Debug View</title>
+</head>
 
-            async function fetchSuggestions() {
-                const questionText =
-                    document.getElementById("askquestion").value;
+<body>
+  <div class="nav">
+    <div class="form-group">
+      <label for="askquestion">
+        Enter a subject-line for your question:
+      </label>
+      <input type="text" id="askquestion" name="askquestion" value="Lab 1 help" oninput="onQuestionInputChange()" />
+    </div>
+    <div class="form-group">
+      <label for="similarity-slider">Min similarity:</label>
+      <input type="range" id="similarity-slider" name="similarity-slider" min="-1" max="1" value="0" step="0.01"
+        oninput="onSimilaritySliderChange()" />
+      <span id="slider-label"> 0.00 </span>
+    </div>
+  </div>
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <th>Suggestion</th>
+          <th>Similarity</th>
+        </tr>
+      </thead>
+      <tbody id="suggestiontable">
+        <tr>
+          <td>Question</td>
+          <td>1.0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-                const similaritySliderValue =
-                    document.getElementById("similarity-slider").value;
+  <script>
+    let fetchSuggestionsTimeout = null;
 
-                const res = await fetch(`/api/question/${questionText}`);
+    async function fetchSuggestions() {
+      const questionText =
+        document.getElementById("askquestion").value;
 
-                if (!res.ok) {
-                    return;
-                }
+      const similaritySliderValue =
+        document.getElementById("similarity-slider").value;
 
-                const data = await res.json();
+      const res = await fetch(`/api/question/${questionText}`);
 
-                const matches = data.matches;
+      if (!res.ok) {
+        return;
+      }
 
-                suggestionTableBody =
-                    document.getElementById("suggestiontable");
+      const data = await res.json();
 
-                suggestionTableBody.innerHTML = "";
+      const matches = data.matches;
 
-                for (let i = 0; i < matches.length; i++) {
-                    if (matches[i].similarity < similaritySliderValue) {
-                        break;
-                    }
+      suggestionTableBody =
+        document.getElementById("suggestiontable");
 
-                    let suggestionRowElement = document.createElement("tr");
+      suggestionTableBody.innerHTML = "";
 
-                    let suggestionTextElement = document.createElement("td");
-                    suggestionTextElement.innerHTML = matches[i].question;
+      for (let i = 0; i < matches.length; i++) {
+        if (matches[i].similarity < similaritySliderValue) {
+          break;
+        }
 
-                    let cosineElement = document.createElement("td");
-                    cosineElement.innerHTML = matches[i].similarity;
+        let suggestionRowElement = document.createElement("tr");
 
-                    suggestionRowElement.appendChild(suggestionTextElement);
-                    suggestionRowElement.appendChild(cosineElement);
+        let suggestionTextElement = document.createElement("td");
+        suggestionTextElement.innerHTML = matches[i].question;
 
-                    suggestionTableBody.appendChild(suggestionRowElement);
-                }
-            }
+        let cosineElement = document.createElement("td");
+        cosineElement.innerHTML = matches[i].similarity;
 
-            function queueFetch() {
-                if (fetchSuggestionsTimeout) {
-                    clearTimeout(fetchSuggestionsTimeout);
-                }
+        suggestionRowElement.appendChild(suggestionTextElement);
+        suggestionRowElement.appendChild(cosineElement);
 
-                fetchSuggestionsTimeout = setTimeout(fetchSuggestions, 190);
-            }
+        suggestionTableBody.appendChild(suggestionRowElement);
+      }
+    }
 
-            function onQuestionInputChange() {
-                queueFetch();
-            }
+    function queueFetch() {
+      if (fetchSuggestionsTimeout) {
+        clearTimeout(fetchSuggestionsTimeout);
+      }
 
-            function onSimilaritySliderChange() {
-                const slider = document.getElementById("similarity-slider");
-                const sliderLabel = document.getElementById("slider-label");
+      fetchSuggestionsTimeout = setTimeout(fetchSuggestions, 190);
+    }
 
-                sliderLabel.innerHTML = Math.round(slider.value * 100) / 100;
+    function onQuestionInputChange() {
+      queueFetch();
+    }
 
-                queueFetch();
-            }
+    function onSimilaritySliderChange() {
+      const slider = document.getElementById("similarity-slider");
+      const sliderLabel = document.getElementById("slider-label");
 
-            fetchSuggestions();
-        </script>
-    </body>
+      sliderLabel.innerHTML = Math.round(slider.value * 100) / 100;
+
+      queueFetch();
+    }
+
+    fetchSuggestions();
+  </script>
+</body>
+
 </html>

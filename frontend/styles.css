@@ -12,6 +12,16 @@ h1 {
     font-size: 3rem;
 }
 
+.row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.row > * {
+  margin: 2em;
+}
+
 .container {
     height: 100%;
     display: flex;
@@ -35,15 +45,15 @@ h1 {
 }
 
 .form-group > input {
-    text-align: center;
-    padding: 0.75em;
+    padding: 1em;
     margin: 1em;
 
-    border-radius: 1em;
+    border-radius: 2em;
     border: #555;
     border-style: solid;
     border-width: 1px;
-    width: 100%;
+
+    flex: 1 1 auto;
 }
 
 .form-group > input:focus {
@@ -71,12 +81,29 @@ h1 {
     background-color: #000;
 }
 
+.form-group > textarea {
+  flex: 1 1 auto;
+  height: 6em;
+  padding: 1em;
+  
+  border-radius: 2em;
+  border: #555;
+  border-style: solid;
+  border-width: 1px;
+}
+
 .card {
     box-shadow: 0px 0px 1em -0.5em #00000070;
     border-radius: 1em;
     padding: 2em;
-    margin-block: 1em;
-    width: min(75%, 25em);
+}
+
+.card--question {
+  flex: 0 1 40em;
+}
+
+.card--suggestions {
+  flex: 0 1 18em;
 }
 
 .suggestion {

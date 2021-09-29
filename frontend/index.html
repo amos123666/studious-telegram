@@ -27,7 +27,7 @@
             <textarea type="text" id="question-body" name="question-body" placeholder="Question Body"></textarea>
           </div>
           <div class="form-group form-group--inline">
-            <button class="btn btn--green push-right" onclick="">Submit</button>
+            <button class="btn btn--green push-right" onclick="submitQuestion()">Submit</button>
           </div>
         </div>
         <div class="card card--suggestions">
@@ -68,7 +68,7 @@
       async function fetchSuggestions() {
         const questionSubject = document.getElementById("askquestion").value || "Help";
 
-        const res = await fetch(`/api/suggestions/${questionSubject}`);
+        const res = await fetch(`/api/suggestion/${questionSubject}`);
 
         if (!res.ok) {
           return;
@@ -113,6 +113,25 @@
         const modal = document.getElementById("question-modal");
 
         modal.style.display = "none";
+      }
+
+      async function submitQuestion() {
+        const res = await fetch(`/api/question/new`, {
+          method: "POST",
+          body: JSON.stringify({
+            subject: "Please I don't understand pointers",
+            body: "I have tried so hard but I don't understand * and & or what int * myIntPtr means!?!",
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) {
+          return;
+        }
+
+        console.log(await res.text());
       }
     </script>
   </body>

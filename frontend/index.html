@@ -12,6 +12,7 @@
     <h1>Help Forum</h1>
     <div class="row">
       <div class="card card--question">
+        <h2>Question</h2>
         <div class="form-group">
           <label for="askquestion">Subject</label>
           <input type="text" id="askquestion" name="askquestion" placeholder="Question Subject"
@@ -25,7 +26,10 @@
           <button class="btn btn--green push-right" onclick="">Submit</button>
         </div>
       </div>
-      <div class="card card--suggestions" id="suggestions"></div>
+      <div class="card card--suggestions">
+        <h2>Suggestions</h2>
+        <div id="suggestions"></div>
+      </div>
     </div>
   </div>
   <div class="modal" id="question-modal" onclick="closeModal()">

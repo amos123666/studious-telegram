@@ -7,32 +7,6 @@ from pathlib import Path
 class App():
 
     def __init__(self, target_model: str, target_interface: str):
-
-        #         # If the diretory does not exists create one
-        # if not os.path.exists('app/storage'):
-        #     os.makedirs('app/storage')
-
-        # # If we don't have any files already in the directory create
-        # # based off the target_model
-        # if len(os.listdir("app/storage")) == 0:
-        #     questions = parseQuestionsAnswersFromFile(
-        #         'app/testfiles/help2002-2017.txt', target_model)
-
-        # # Find the first file that contains the target model
-        # else:
-        #     flag = False
-        #     for file in os.listdir('app/storage'):
-        #         if target_model in file:
-        #             file = f'app/storage/{file}'
-        #             json = JsonLoader(file)
-        #             questions = json.read_data()
-        #             flag = True
-        #             break
-        #     if not flag:
-        #         questions = parseQuestionsAnswersFromFile(
-        #             'app/testfiles/help2002-2017.txt', target_model)
-
-
         questions, bodies = parseQuestionsAnswersFromFile(
             'app/testfiles/help2002-2017.txt')
 

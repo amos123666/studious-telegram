@@ -1,4 +1,4 @@
-from .interface import BasicCLI, WebInterface
+from .interface import BasicCLI, TornadoWebInterface
 from .domain import UniversalEncoder, SentBERT, Doc2Vec, T5
 from .parser import parseQuestionsAnswersFromFile
 from pathlib import Path
@@ -7,6 +7,7 @@ from pathlib import Path
 class App():
 
     def __init__(self, target_model: str, target_interface: str):
+
         questions, bodies = parseQuestionsAnswersFromFile(
             'app/testfiles/help2002-2017.txt')
 
@@ -34,7 +35,7 @@ class App():
             self.__interface = BasicCLI(
                 questionMatcher, summariser, questions, target_model)
         elif target_interface == "web":
-            self.__interface = WebInterface(questionMatcher)
+            self.__interface = TornadoWebInterface(8080, questionMatcher)
         else:
             raise ValueError(
                 f"target_interface ({target_interface}) is not valid")

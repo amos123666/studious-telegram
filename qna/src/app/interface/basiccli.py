@@ -159,6 +159,7 @@ class BasicCLI(AbstractUserInterface):
                         if(self.__questions[suggested_question]['From'] == "poster013@student.uwa.edu.au"):
                             author = "Tutor"
                         print(f"{i + 1}: {suggestions[i]} ({author})")
+                        print(self.print_question(suggestions[i]))
                     print("")
 
                     flag = False

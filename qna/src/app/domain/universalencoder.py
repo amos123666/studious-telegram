@@ -1,12 +1,15 @@
-from .question import Question
-from .questionmatcher import AbstractQuestionMatcher
-from ..parser.parser import preprocess
+from typing import List, Tuple
 import tensorflow as tf
 import tensorflow_hub as hub
 from scipy.spatial.distance import cosine
 import operator
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+import nltk
+import string
 
-from typing import List, Tuple
+from .question import Question
+from .questionmatcher import AbstractQuestionMatcher
 
 
 class UniversalEncoder(AbstractQuestionMatcher):
@@ -46,7 +49,7 @@ class UniversalEncoder(AbstractQuestionMatcher):
             question dictionary ordered from most similar to least
         '''
         # Pass the asked question into model to get embedding
-        # question = preprocess(question)
+        question = preprocess(question)
         query_embedding = self.__model([question])[0]
         query_embedding = tf.reshape(query_embedding, (-1, 1))
 
@@ -67,3 +70,25 @@ class UniversalEncoder(AbstractQuestionMatcher):
         suggestions.sort(key=operator.itemgetter(1), reverse=True)
 
         return suggestions
+
+
+def preprocess(data):
+
+    # Tokenize question and remove punctuation and lower strings
+    data = word_tokenize(data)
+    data = [i for i in data if i not in string.punctuation]
+    data = [i.lower() for i in data]
+
+    # Convert words to stem form
+    # e.g. 'playing' is converted to 'play'
+    lemmatizer = WordNetLemmatizer()
+    data = [lemmatizer.lemmatize(i) for i in data]
+
+    # Remove stopwords as they don't add value to the sentence meaning
+    # and select only the top 10 stop words.
+    # e.g. 'the' is not a valuable word
+    stopwords = nltk.corpus.stopwords.words('english')
+    stopwords = stopwords[0:10]
+    data = [i for i in data if i not in stopwords]
+
+    return " ".join(data)

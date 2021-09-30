@@ -1,9 +1,4 @@
 from typing import Dict, List, Tuple
-import numpy as np
-from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import word_tokenize
-import nltk
-import string
 import email
 
 from ..domain.question import Question
@@ -92,25 +87,3 @@ def get_summarisation(data, tokenizer, model):
         early_stopping=True)
     # just for debugging
     return tokenizer.decode(outputs[0])
-
-
-def preprocess(data):
-
-    # Tokenize question and remove punctuation and lower strings
-    data = word_tokenize(data)
-    data = [i for i in data if i not in string.punctuation]
-    data = [i.lower() for i in data]
-
-    # Convert words to stem form
-    # e.g. 'playing' is converted to 'play'
-    lemmatizer = WordNetLemmatizer()
-    data = [lemmatizer.lemmatize(i) for i in data]
-
-    # Remove stopwords as they don't add value to the sentence meaning
-    # and select only the top 10 stop words.
-    # e.g. 'the' is not a valuable word
-    stopwords = nltk.corpus.stopwords.words('english')
-    stopwords = stopwords[0:10]
-    data = [i for i in data if i not in stopwords]
-
-    return " ".join(data)

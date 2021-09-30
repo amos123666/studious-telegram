@@ -47,8 +47,12 @@ class SuggestionHandler(BaseHandler):
 
 
 class NewQuestionHandler(BaseHandler):
-    def initialize(self, questionMatcher: AbstractQuestionMatcher) -> None:
+    def initialize(
+            self,
+            questionMatcher: AbstractQuestionMatcher,
+            questions: List[Question]) -> None:
         self.questionMatcher = questionMatcher
+        self.questions = questions
 
     async def post(self) -> None:
         if self.json_args is None:
@@ -57,6 +61,12 @@ class NewQuestionHandler(BaseHandler):
 
         self.questionMatcher.addQuestions(
             [self.json_args['subject']], self.json_args['body'])
+
+        self.questions.append(
+            Question(
+                self.json_args['subject'],
+                self.json_args['body'],
+                []))
 
         self.set_status(200)
 
@@ -93,11 +103,17 @@ class TornadoWebInterface(AbstractUserInterface):
         self.__questions = questions
 
     def start(self) -> None:
-        app = tornado.web.Application([
-            (r"/api/suggestion/([^/]+)", SuggestionHandler, {"questionMatcher": self.__questionMatcher}),
-            (r"/api/question/new", NewQuestionHandler, {"questionMatcher": self.__questionMatcher}),
-            (r"/api/question/get/([^/]+)", GetQuestionHandler, {"questions": self.__questions}),
-        ])
+        app = tornado.web.Application([(r"/api/suggestion/([^/]+)",
+                                        SuggestionHandler,
+                                        {"questionMatcher": self.__questionMatcher}),
+                                       (r"/api/question/new",
+                                        NewQuestionHandler,
+                                        {"questionMatcher": self.__questionMatcher,
+                                         "questions": self.__questions}),
+                                       (r"/api/question/get/([^/]+)",
+                                        GetQuestionHandler,
+                                        {"questions": self.__questions}),
+                                       ])
 
         app.listen(self.__port)
 

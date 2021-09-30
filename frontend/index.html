@@ -39,10 +39,10 @@
     <div class="modal" id="question-modal" onclick="closeModal()">
       <div class="modal--content" onclick="event.stopPropagation()">
         <div class="modal--heading">
-          <h2>How do I use pointers?</h2>
+          <h2 id="question-modal--subject">How do I use pointers?</h2>
         </div>
         <div class="modal--body">
-          <p>
+          <p id="question-modal--body">
             My Modal body! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque assumenda earum sit
             veritatis ratione officiis velit nemo incidunt doloribus vero, aspernatur in eligendi corporis amet iusto
             fugiat quasi consequuntur sapiente hic tenetur eius dolore deserunt dolores voluptatibus! Voluptatum fugit
@@ -58,8 +58,21 @@
       </div>
     </div>
     <script>
-      function onSuggestionClick(suggestionId) {
-        console.log(suggestionId);
+      async function onSuggestionClick(suggestionSubject) {
+        const modalSubject = document.getElementById("question-modal--subject");
+        const modalBody = document.getElementById("question-modal--body");
+
+        const res = await fetch(`/api/question/get/${encodeURIComponent(suggestionSubject)}`);
+
+        if (!res.ok) {
+          return;
+        }
+
+        const data = await res.json();
+
+        modalSubject.innerHTML = data.subject;
+        modalBody.innerHTML = data.body;
+
         openModal();
       }
 
@@ -68,7 +81,7 @@
       async function fetchSuggestions() {
         const questionSubject = document.getElementById("askquestion").value || "Help";
 
-        const res = await fetch(`/api/suggestion/${questionSubject}`);
+        const res = await fetch(`/api/suggestion/${encodeURIComponent(questionSubject)}`);
 
         if (!res.ok) {
           return;
@@ -87,7 +100,7 @@
           let suggestionElement = document.createElement("div");
           suggestionElement.innerHTML = matches[i].question;
           suggestionElement.classList.add("suggestion");
-          suggestionElement.onclick = () => onSuggestionClick(i);
+          suggestionElement.onclick = () => onSuggestionClick(matches[i].question);
 
           suggestionCardElement.appendChild(suggestionElement);
         }

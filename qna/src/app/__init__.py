@@ -1,3 +1,5 @@
+from typing import List
+from .domain.question import Question
 from .interface import BasicCLI, TornadoWebInterface
 from .domain import UniversalEncoder, SentBERT, Doc2Vec, T5
 from .parser import parseQuestionsAnswersFromFile
@@ -10,6 +12,11 @@ class App():
 
         questions, bodies = parseQuestionsAnswersFromFile(
             'app/testfiles/help2002-2017.txt')
+
+        questionsObjects: List[Question] = []
+
+        for i, question in enumerate(questions):
+            questionsObjects.append(Question(question, bodies[i], []))
 
         if target_model == "UniversalEncoder":
             # Search for existing embeddings
@@ -35,7 +42,8 @@ class App():
             self.__interface = BasicCLI(
                 questionMatcher, summariser, questions, target_model)
         elif target_interface == "web":
-            self.__interface = TornadoWebInterface(8080, questionMatcher)
+            self.__interface = TornadoWebInterface(
+                8080, questionMatcher, questionsObjects)
         else:
             raise ValueError(
                 f"target_interface ({target_interface}) is not valid")

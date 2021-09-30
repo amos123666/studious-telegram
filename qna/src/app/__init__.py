@@ -7,16 +7,9 @@ from pathlib import Path
 
 
 class App():
-
     def __init__(self, target_model: str, target_interface: str):
-
-        questions, bodies = parseQuestionsAnswersFromFile(
+        questions = parseQuestionsAnswersFromFile(
             'app/testfiles/help2002-2017.txt')
-
-        questionsObjects: List[Question] = []
-
-        for i, question in enumerate(questions):
-            questionsObjects.append(Question(question, bodies[i], []))
 
         if target_model == "UniversalEncoder":
             # Search for existing embeddings
@@ -35,7 +28,7 @@ class App():
         else:
             raise ValueError(f"targetModel ({target_model}) is not valid")
 
-        questionMatcher.addQuestions(questions, bodies)
+        questionMatcher.addQuestions(questions)
 
         if target_interface == "cli":
             summariser = T5()
@@ -43,7 +36,7 @@ class App():
                 questionMatcher, summariser, questions, target_model)
         elif target_interface == "web":
             self.__interface = TornadoWebInterface(
-                8080, questionMatcher, questionsObjects)
+                8080, questionMatcher, questions)
         else:
             raise ValueError(
                 f"target_interface ({target_interface}) is not valid")

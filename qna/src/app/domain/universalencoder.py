@@ -1,3 +1,4 @@
+from .question import Question
 from .questionmatcher import AbstractQuestionMatcher
 from ..parser.parser import preprocess
 import tensorflow as tf
@@ -23,24 +24,25 @@ class UniversalEncoder(AbstractQuestionMatcher):
         '''
 
         self.__model = hub.load(self.MODULE_URL)
-        self.__questions = []
-        self.__bodies = []
+        self.__questions: List[Question] = []
         self.__question_embeddings = []
 
-    def addQuestions(self, questions: List[str], bodies: List[str]) -> None:
+    def addQuestions(self, questions: List[Question]) -> None:
         self.__questions += questions
-        self.__bodies += bodies
-        self.__question_embeddings += [tf.reshape(embedding, (-1, 1))
-                                       for embedding in self.__model(questions)]
 
-    def getSuggestions(self, question: str, text_vec=True) -> List[Tuple[str, float]]:
+        embeddings = self.__model([question.subject for question in questions])
+        self.__question_embeddings += [tf.reshape(embedding, (-1, 1))
+                                       for embedding in embeddings]
+
+    def getSuggestions(self, question: str,
+                       text_vec=True) -> List[Tuple[str, float]]:
         '''
-        Determines question suggestions for a given question, based on the 
+        Determines question suggestions for a given question, based on the
         similarity of their subject-line.
 
         :param self: Instance of the UniversalEncoder object
         :param question: An element of the question dictionary
-        :return [k[0] for k in similarity_dict]: List of all questions from 
+        :return [k[0] for k in similarity_dict]: List of all questions from
             question dictionary ordered from most similar to least
         '''
         # Pass the asked question into model to get embedding
@@ -51,11 +53,15 @@ class UniversalEncoder(AbstractQuestionMatcher):
         # Loop through the sentence embedding of each question, finding the cosine
         # between this and the embedding of the asked question
         suggestions = []
-        for i, question in enumerate(self.__questions):
+        for i, oldQuestion in enumerate(self.__questions):
             question_embedding = self.__question_embeddings[i]
 
             suggestions.append(
-                (question, 1 - cosine(question_embedding, query_embedding)))
+                (oldQuestion.subject,
+                 1 -
+                 cosine(
+                     question_embedding,
+                     query_embedding)))
 
         # Order dictionary to a list, such that higher cosines are first
         suggestions.sort(key=operator.itemgetter(1), reverse=True)

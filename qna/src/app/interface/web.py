@@ -59,14 +59,14 @@ class NewQuestionHandler(BaseHandler):
             self.set_status(400)
             return
 
-        self.questionMatcher.addQuestions(
-            [self.json_args['subject']], self.json_args['body'])
+        newQuestion = Question(
+            self.json_args['subject'],
+            self.json_args['body'],
+            [])
 
-        self.questions.append(
-            Question(
-                self.json_args['subject'],
-                self.json_args['body'],
-                []))
+        self.questionMatcher.addQuestions([newQuestion])
+
+        self.questions.append(newQuestion)
 
         self.set_status(200)
 
@@ -104,16 +104,16 @@ class TornadoWebInterface(AbstractUserInterface):
 
     def start(self) -> None:
         app = tornado.web.Application([(r"/api/suggestion/([^/]+)",
-                                        SuggestionHandler,
-                                        {"questionMatcher": self.__questionMatcher}),
-                                       (r"/api/question/new",
-                                        NewQuestionHandler,
-                                        {"questionMatcher": self.__questionMatcher,
-                                         "questions": self.__questions}),
-                                       (r"/api/question/get/([^/]+)",
-                                        GetQuestionHandler,
-                                        {"questions": self.__questions}),
-                                       ])
+                                      SuggestionHandler,
+                                      {"questionMatcher": self.__questionMatcher}),
+            (r"/api/question/new",
+             NewQuestionHandler,
+             {"questionMatcher": self.__questionMatcher,
+              "questions": self.__questions}),
+            (r"/api/question/get/([^/]+)",
+             GetQuestionHandler,
+             {"questions": self.__questions}),
+        ])
 
         app.listen(self.__port)
 

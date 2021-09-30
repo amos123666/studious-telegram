@@ -58,10 +58,16 @@
       </div>
     </div>
     <script>
-      async function onSuggestionClick(suggestionSubject) {
-        const modalSubject = document.getElementById("question-modal--subject");
-        const modalBody = document.getElementById("question-modal--body");
+      const newQuestionSubjectElement = document.getElementById("askquestion");
+      const newQuestionBodyElement = document.getElementById("question-body");
 
+      const suggestionCardElement = document.getElementById("suggestions");
+
+      const modalElement = document.getElementById("question-modal");
+      const modalSubjectElement = document.getElementById("question-modal--subject");
+      const modalBodyElement = document.getElementById("question-modal--body");
+
+      async function onSuggestionClick(suggestionSubject) {
         const res = await fetch(`/api/question/get/${encodeURIComponent(suggestionSubject)}`);
 
         if (!res.ok) {
@@ -70,8 +76,8 @@
 
         const data = await res.json();
 
-        modalSubject.innerHTML = data.subject;
-        modalBody.innerHTML = data.body;
+        modalSubjectElement.innerHTML = data.subject;
+        modalBodyElement.innerHTML = data.body;
 
         openModal();
       }
@@ -79,7 +85,7 @@
       let fetchSuggestionsTimeout = null;
 
       async function fetchSuggestions() {
-        const questionSubject = document.getElementById("askquestion").value || "Help";
+        const questionSubject = newQuestionSubjectElement.value || "Help";
 
         const res = await fetch(`/api/suggestion/${encodeURIComponent(questionSubject)}`);
 
@@ -90,8 +96,6 @@
         const data = await res.json();
 
         const matches = data.matches;
-
-        suggestionCardElement = document.getElementById("suggestions");
 
         suggestionCardElement.innerHTML = "";
 
@@ -117,23 +121,19 @@
       fetchSuggestions();
 
       function openModal() {
-        const modal = document.getElementById("question-modal");
-
-        modal.style.display = "flex";
+        modalElement.style.display = "flex";
       }
 
       function closeModal() {
-        const modal = document.getElementById("question-modal");
-
-        modal.style.display = "none";
+        modalElement.style.display = "none";
       }
 
       async function submitQuestion() {
         const res = await fetch(`/api/question/new`, {
           method: "POST",
           body: JSON.stringify({
-            subject: "Please I don't understand pointers",
-            body: "I have tried so hard but I don't understand * and & or what int * myIntPtr means!?!",
+            subject: newQuestionSubjectElement.value,
+            body: newQuestionBodyElement.value,
           }),
           headers: {
             "Content-Type": "application/json",

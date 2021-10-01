@@ -17,4 +17,4 @@ services:
     volumes:
       - ./frontend:/usr/share/nginx/html
     ports:
-      - 8081:80
+      - 80:80

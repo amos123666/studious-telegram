@@ -114,6 +114,8 @@ class BasicCLI(AbstractUserInterface):
             suggestions, title_vec = self.__matcher.getSuggestions(
                 question, False)
 
+            suggestions = [suggestion[0] for suggestion in suggestions]
+
             print(f'QUESTIONS: {question}\n')
 
             for i in range(len(suggestions)):
@@ -151,6 +153,8 @@ class BasicCLI(AbstractUserInterface):
                     summarisation = question + summarisation
                     suggestions, text_vec = self.__matcher.getSuggestions(
                         summarisation)
+
+                    suggestions = [suggestion[0] for suggestion in suggestions]
 
                     print(f'QUESTIONS: {question}\n')
 

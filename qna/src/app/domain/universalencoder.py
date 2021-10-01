@@ -69,7 +69,7 @@ class UniversalEncoder(AbstractQuestionMatcher):
         # Order dictionary to a list, such that higher cosines are first
         suggestions.sort(key=operator.itemgetter(1), reverse=True)
 
-        return suggestions
+        return suggestions, query_embedding
 
 
 def preprocess(data):

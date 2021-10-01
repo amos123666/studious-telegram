@@ -3,6 +3,7 @@ from .domain.question import Question
 from .interface import BasicCLI, TornadoWebInterface
 from .domain import UniversalEncoder, SentBERT, Doc2Vec, T5
 from .parser import parseQuestionsAnswersFromFile
+from .parser import old_parseQuestionsAnswersFromFile
 from pathlib import Path
 
 
@@ -12,14 +13,6 @@ class App():
             'app/testfiles/help2002-2017.txt')
 
         if target_model == "UniversalEncoder":
-            # Search for existing embeddings
-            storageDir = Path('storage')
-
-            if storageDir.exists() and storageDir.is_dir():
-                for file in storageDir.iterdir():
-                    if file.is_file() and target_model.lower() in file.name.lower():
-                        print("Have embeddings file!")
-
             questionMatcher = UniversalEncoder()
         elif target_model == "BERT":
             questionMatcher = SentBERT()
@@ -32,6 +25,10 @@ class App():
 
         if target_interface == "cli":
             summariser = T5()
+
+            questions = old_parseQuestionsAnswersFromFile(
+                'app/testfiles/help2002-2017.txt', target_model)
+
             self.__interface = BasicCLI(
                 questionMatcher, summariser, questions, target_model)
         elif target_interface == "web":

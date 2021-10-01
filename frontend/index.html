@@ -36,7 +36,7 @@
         </div>
       </div>
     </div>
-    <div class="modal" id="question-modal" onclick="closeModal()">
+    <div class="modal" id="question-modal" onclick="closeQuestionModal()">
       <div class="modal--content" onclick="event.stopPropagation()">
         <div class="modal--heading">
           <h2 id="question-modal--subject">How do I use pointers?</h2>
@@ -51,8 +51,21 @@
         </div>
         <div class="modal--footer">
           <div class="form-group form-group--inline">
-            <button class="btn btn--green" onclick="">View answers</button>
-            <button class="btn push-right" onclick="closeModal()">Close</button>
+            <button class="btn btn--green" onclick="showAnswers()">View answers</button>
+            <button class="btn push-right" onclick="closeQuestionModal()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="answer-modal" onclick="closeAnswerModal()">
+      <div class="modal--content" onclick="event.stopPropagation()">
+        <div class="modal--heading">
+          <h2 id="answer-modal--subject">How do I use pointers?</h2>
+        </div>
+        <div class="modal--body" id="answer-modal--body"></div>
+        <div class="modal--footer">
+          <div class="form-group form-group--inline">
+            <button class="btn push-right" onclick="closeAnswerModal()">Close</button>
           </div>
         </div>
       </div>
@@ -67,6 +80,12 @@
       const modalSubjectElement = document.getElementById("question-modal--subject");
       const modalBodyElement = document.getElementById("question-modal--body");
 
+      const answerModalElement = document.getElementById("answer-modal");
+      const answerModalSubjectElement = document.getElementById("answer-modal--subject");
+      const answerModalBodyElement = document.getElementById("answer-modal--body");
+
+      let modalData = null;
+
       async function onSuggestionClick(suggestionSubject) {
         const res = await fetch(`/api/question/get/${encodeURIComponent(suggestionSubject)}`);
 
@@ -74,12 +93,34 @@
           return;
         }
 
-        const data = await res.json();
+        modalData = await res.json();
 
-        modalSubjectElement.innerHTML = data.subject;
-        modalBodyElement.innerHTML = data.body;
+        modalSubjectElement.innerHTML = modalData.subject;
+        modalBodyElement.innerHTML = modalData.body;
 
-        openModal();
+        answerModalSubjectElement.innerHTML = modalData.subject;
+        answerModalBodyElement.innerHTML = "";
+
+        for (const answer of modalData.answers) {
+          const answerElement = document.createElement("p");
+          answerElement.innerHTML = answer;
+          answerModalBodyElement.appendChild(answerElement);
+        }
+
+        if (modalData.answers.length === 0) {
+          const noAnswersElement = document.createElement("p");
+
+          noAnswersElement.innerHTML = "There are no answers for this question.";
+
+          answerModalBodyElement.appendChild(noAnswersElement);
+        }
+
+        openQuestionModal();
+      }
+
+      function showAnswers() {
+        closeQuestionModal();
+        openAnswerModal();
       }
 
       let fetchSuggestionsTimeout = null;
@@ -120,12 +161,20 @@
 
       fetchSuggestions();
 
-      function openModal() {
+      function openQuestionModal() {
         modalElement.style.display = "flex";
       }
 
-      function closeModal() {
+      function closeQuestionModal() {
         modalElement.style.display = "none";
+      }
+
+      function openAnswerModal() {
+        answerModalElement.style.display = "flex";
+      }
+
+      function closeAnswerModal() {
+        answerModalElement.style.display = "none";
       }
 
       async function submitQuestion() {

@@ -187,6 +187,12 @@ textarea {
 
   box-shadow: 0px 0px 1em -0.5em #00000070;
   border-radius: 1em;
+
+  max-height: 90vh;
+
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
 }
 
 .modal--heading,
@@ -203,10 +209,18 @@ textarea {
   padding-inline: 1.5em;
   padding-block: 1em;
   border-block: 1px solid #aaa;
+
+  overflow-x: auto;
 }
 
 .modal--body > p {
   white-space: pre-line;
+}
+
+.modal--body > p + p {
+  padding-top: 1em;
+  border-top: 1px solid #aaa;
+  margin-top: 1em;
 }
 
 .push-right {

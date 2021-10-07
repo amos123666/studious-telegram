@@ -59,6 +59,7 @@ def getPostsFromThreads(threads, target_model):
     is stored in a json formatted dictionary to be stored in a JSON file
 
     :param threads: List of question/answer strings
+    :param target_model: The target model
     :return None:
     '''
 

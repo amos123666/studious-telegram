@@ -86,6 +86,8 @@ h1 {
     position: relative;
     border-radius: 1em;
     transition: transform 0.1s ease-in;
+    display: flex;
+    margin-left: auto;
 }
 
 .suggestion::after {
@@ -115,4 +117,8 @@ h1 {
 
 .suggestion:active::after {
     opacity: 0.8 !important;
+}
+
+.badges {
+    float: right;
 }

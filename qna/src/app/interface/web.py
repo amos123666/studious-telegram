@@ -10,6 +10,11 @@ class MyServer(BaseHTTPRequestHandler):
     matcher: AbstractQuestionMatcher = None
 
     def do_GET(self):
+        '''
+        Override do_GET method to handle HTTP GET request.
+
+        :param self: Instance of the MyServer object
+        '''
         request_path = self.path.split('/')
 
         print(f"Received request: {request_path}")
@@ -56,6 +61,12 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 class WebInterface(AbstractUserInterface):
 
     def __init__(self, matcher) -> None:
+        '''
+        Constructor for the WebInterface class.
+
+        :param self: Instance of the WebInterface object
+        :param matcher: Question matcher
+        '''
         super().__init__()
         MyServer.matcher = matcher
 

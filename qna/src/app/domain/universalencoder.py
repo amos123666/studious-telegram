@@ -28,7 +28,7 @@ class UniversalEncoder(AbstractQuestionMatcher):
         self.__question_list = list(questions.keys())
         #self.__sentence_embeddings = self.__model(self.__question_list)
 
-    def getSuggestions(self, question: str, text_vec=True) -> List[str]:
+    def getSuggestions(self, question: str, body: str) -> List[str]:
         '''
         Determines question suggestions for a given question, based on the 
         similarity of their subject-line.
@@ -38,6 +38,7 @@ class UniversalEncoder(AbstractQuestionMatcher):
         :return [k[0] for k in similarity_dict]: List of all questions from 
             question dictionary ordered from most similar to least
         '''
+
         # Pass the asked question into model to get embedding
         question = preprocess(question)
         query_embedding = self.__model([question])[0]

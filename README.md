@@ -23,6 +23,13 @@ Require Python 3.8+
 
 ## ProjectTree
 
+|  .dockerignore
+|  .gitignore
+|  docker-compose.yaml
+|- .idea
+    | .gitignore
+    |
+
 │  .dockerignore<br>
 │  .gitignore<br>
 │  docker-compose.yaml<br>

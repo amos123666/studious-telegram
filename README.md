@@ -160,5 +160,5 @@ git push
 4. Tests will run, your code gets reviewed and hopefully then merged
 5. Delete the branch and start again for the next feature/bug
 ```
-git branch -d epic-feature
+git branch -d epic-feature 
 ```

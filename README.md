@@ -23,8 +23,8 @@ Require Python 3.8+
 
 ## ProjectTree
 
-│  .dockerignore
-│  .gitignore
+│  .dockerignore<br>
+│  .gitignore<br>
 │  docker-compose.yaml
 │  README.md
 │  readme.txt

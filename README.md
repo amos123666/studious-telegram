@@ -23,79 +23,79 @@ Require Python 3.8+
 
 ## ProjectTree
 
-│  .dockerignore<br>
-│  .gitignore<br>
-│  docker-compose.yaml<br>
-│  README.md<br>
-│  readme.txt<br>
-│  start.sh<br>
-│  <br>
-├─.idea<br>
-   │  .gitignore<br>
-│  │  misc.xml<br>
-│  │  modules.xml<br>
-│  │  studious-telegram-main.iml<br>
-│  │  workspace.xml<br>
+│  .dockerignore
+│  .gitignore
+│  docker-compose.yaml
+│  README.md
+│  readme.txt
+│  start.sh
+│  
+├─.idea
+   │  .gitignore
+│  │  misc.xml
+│  │  modules.xml
+│  │  studious-telegram-main.iml
+│  │  workspace.xml
 │  │  
-│  └─inspectionProfiles<br>
-│          profiles_settings.xml<br>
+│  └─inspectionProfiles
+│          profiles_settings.xml
 │          
-├─docker<br>
-│      nginx.dockerfile<br>
-│      qna.dockerfile<br>
-│      README.md<br>
+├─docker
+│      nginx.dockerfile
+│      qna.dockerfile
+│      README.md
 │      
-├─docs<br>
-│  │  README.md<br>
+├─docs
+│  │  README.md
 │  │  
-│  └─diagrams<br>
-│          qnaarchitecture.drawio.svg<br>
-│          structure.drawio.svg<br>
+│  └─diagrams
+│          qnaarchitecture.drawio.svg
+│          structure.drawio.svg
 │          
-├─frontend<br>
-│      debug-styles.css<br>
-│      debug.html<br>
-│      index.html<br>
-│      README.md<br>
-│      styles.css<br>
+├─frontend
+│      debug-styles.css
+│      debug.html
+│      index.html
+│      README.md
+│      styles.css
 │      
-├─nginx<br>
-│      nginx.conf<br>
-│      README.md<br>
+├─nginx
+│      nginx.conf
+│      README.md
 │      
-└─qna<br>
-    │  README.md<br>
+└─qna
+    │  README.md
     │  
-    └─src<br>
-        │  main.py<br>
+    └─src
+        │  main.py
         │  
-        └─app<br>
-            │  __init__.py<br>
+        └─app
+            │  __init__.py
             │  
-            ├─domain<br>
-            │  │  doc2vec.py<br>
-            │  │  keywordmatcher.py<br>
-            │  │  questionmatcher.py<br>
-            │  │  sent_BERT.py<br>
-            │  │  summarisation.py<br>
-            │  │  t5.py<br>
-            │  │  universalencoder.py<br>
-            │  │  __init__.py<br>
+            ├─domain
+            │  │  doc2vec.py
+            │  │  keywordmatcher.py
+            │  │  questionmatcher.py
+            │  │  sent_BERT.py
+            │  │  summarisation.py
+            │  │  t5.py
+            │  │  universalencoder.py
+            │  │  __init__.py
             │  │  
-            │  └─__pycache__<br>
-            │          doc2vec.cpython-38.pyc<br>
-            │          questionmatcher.cpython-38.pyc<br>
-            │          __init__.cpython-38.pyc<br>
+            │  └─__pycache__
+            │          doc2vec.cpython-38.pyc
+            │          questionmatcher.cpython-38.pyc
+            │          __init__.cpython-38.pyc
             │          
-            ├─interface<br>
-            │  │  basiccli.py<br>
-            │  │  userinterface.py<br>
-            │  │  web.py<br>
-            │  │  __init__.py<br>
+            ├─interface
+            │  │  basiccli.py
+            │  │  userinterface.py
+            │  │  web.py
+            │  │  __init__.py
             │  │  
-            │  └─__pycache__<br>
-            │          userinterface.cpython-38.pyc<br>
-            │          __init__.cpython-38.pyc<br>
+            │  └─__pycache__
+            │          userinterface.cpython-38.pyc
+            │          __init__.cpython-38.pyc
             │          
             ├─parser
             │      json_loader.py

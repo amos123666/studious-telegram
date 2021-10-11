@@ -31,7 +31,7 @@ Require Python 3.8+
 │  start.sh<br>
 │  <br>
 ├─.idea<br>
-│  │  .gitignore<br>
+   │  .gitignore<br>
 │  │  misc.xml<br>
 │  │  modules.xml<br>
 │  │  studious-telegram-main.iml<br>
